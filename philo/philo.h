@@ -6,7 +6,7 @@
 /*   By: tozaki <tozaki@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/23 14:27:27 by tozaki            #+#    #+#             */
-/*   Updated: 2025/12/23 19:30:57 by tozaki           ###   ########.fr       */
+/*   Updated: 2025/12/27 21:17:56 by tozaki           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@
 
 typedef struct s_input_info
 {
-	int	philosophers_count;
+	int	philo_max;
 	int	time_to_die;
 	int	time_to_eat;
 	int	time_to_sleep;
@@ -33,12 +33,36 @@ typedef struct s_thread_info
 	int				time_to_die;
 	int				time_to_eat;
 	int				time_to_sleep;
+	int				time_to_think;
 	pthread_mutex_t	right_fork;
 	pthread_mutex_t	left_fork;
 	pthread_mutex_t	tty;
 }	t_thread_info;
 
-/*convert_input.h*/
+typedef struct s_mutexes
+{
+	pthread_mutex_t	*forks;
+	pthread_mutex_t	tty;
+	pthread_mutex_t	death;
+}	t_mutexes;
+
+typedef struct s_philo
+{
+	t_input_info	iinfo;
+	pthread_t		*threads;
+	pthread_mutex_t	*forks;
+	pthread_mutex_t	tty;
+	pthread_mutex_t	death_lock;
+	int				is_dead;
+}	t_philo;
+
+/*convert_input.c*/
 int	convert_input(int argc, char **argv, t_input_info *input);
+
+/*launch_threads.c*/
+int	launch_threads(t_input_info iinfo, t_mutexes mutexes);
+
+/*routine.c*/
+void	*philosophers_routine(void *param);
 
 #endif

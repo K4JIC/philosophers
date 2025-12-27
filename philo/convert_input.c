@@ -6,12 +6,16 @@
 /*   By: tozaki <tozaki@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/23 15:27:14 by tozaki            #+#    #+#             */
-/*   Updated: 2025/12/23 15:28:18 by tozaki           ###   ########.fr       */
+/*   Updated: 2025/12/27 17:11:08 by tozaki           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
-
+/**
+ * receive "char **argv"
+ * pack "char **argv" in "t_input_info input_info"
+ * return input_info
+ */
 static int	ft_isnum(char c)
 {
 	return ('0' <= c && c <= '9');
@@ -50,19 +54,19 @@ static int	validate_atoi(int *integer, char *ascii)
 	return (SUCCESS);
 }
 
-int	convert_input(int argc, char **argv, t_input_info *input)
+int	convert_input(int argc, char **argv, t_input_info *iinfo)
 {
-	if (validate_atoi(&(input->philosophers_count), argv[1]) == FAIL)
+	if (validate_atoi(&(iinfo->philo_max), argv[1]) == FAIL)
 		return (FAIL);
-	if (validate_atoi(&(input->time_to_die), argv[2]) == FAIL)
+	if (validate_atoi(&(iinfo->time_to_die), argv[2]) == FAIL)
 		return (FAIL);
-	if (validate_atoi(&(input->time_to_eat), argv[3]) == FAIL)
+	if (validate_atoi(&(iinfo->time_to_eat), argv[3]) == FAIL)
 		return (FAIL);
-	if (validate_atoi(&(input->time_to_sleep), argv[4]) == FAIL)
+	if (validate_atoi(&(iinfo->time_to_sleep), argv[4]) == FAIL)
 		return (FAIL);
 	if (argc == 6)
 	{
-		if (validate_atoi(&(input->philosophers_must_eat), argv[5]) == FAIL)
+		if (validate_atoi(&(iinfo->philosophers_must_eat), argv[5]) == FAIL)
 			return (FAIL);
 	}
 	return (SUCCESS);
