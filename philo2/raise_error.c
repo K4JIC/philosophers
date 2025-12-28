@@ -1,0 +1,55 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   raise_error.c                                      :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: tozaki <tozaki@student.42tokyo.jp>         +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/12/28 19:24:30 by tozaki            #+#    #+#             */
+/*   Updated: 2025/12/28 20:45:21 by tozaki           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "philo.h"
+#include <unistd.h>
+
+static int	ft_puterrmsg(char *errmsg)
+{
+	int	mlen;
+
+	if (!errmsg)
+		return (FAIL);
+	mlen = 0;
+	while (errmsg[mlen])
+		mlen++;
+	if (write(2, errmsg, mlen) == -1)
+		return (FAIL);
+	return (SUCCESS);
+}
+
+static int	raise_error(t_master *master, char *errmsg)
+{
+	free_master(master);
+	ft_puterrmsg(errmsg);
+	return (1);
+}
+
+int	input_error(t_master *master)
+{
+	return (raise_error(master, "Error : Forbidden input.\n"));
+}
+
+int	malloc_error(t_master *master)
+{
+	return (raise_error(master, "Error : malloc() failed.\n"));
+}
+
+int	gettime_error(t_master *master)
+{
+	return (raise_error(master, "Error : gettimeofday() failed.\n"));
+}
+
+int	threads_error(t_master *master)
+{
+	return (raise_error(master, "Error : Failed to launch threads.\n"));
+}

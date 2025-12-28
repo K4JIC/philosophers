@@ -6,7 +6,7 @@
 /*   By: tozaki <tozaki@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/20 20:35:50 by tozaki            #+#    #+#             */
-/*   Updated: 2025/12/27 17:24:48 by tozaki           ###   ########.fr       */
+/*   Updated: 2025/12/28 17:35:30 by tozaki           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,15 +36,14 @@ void	free_all(t_mutexes s_mutexes, )
 
 int	main(int argc, char **argv)
 {
-	t_input_info	iinfo;
-	t_mutexes		mutexes;
+	t_philo	philo;
 
 	if (argc != 5 && argc != 6)
 		return (argument_error());
-	if (convert_input(argc, argv, &iinfo) == FAIL)
+	if (convert_input(argc, argv, &philo->iinfo) == FAIL)
 		return (argument_error());
-	mutexes.forks = fork_init(iinfo);
-	if (!mutexes.forks)
+	philo->mutexes.forks = fork_init(philo->iinfo);
+	if (!philo->mutexes.forks)
 		return (malloc_error());
 	if (launch_threads(iinfo, mutexes) == FAIL)
 		return (launch_error());
