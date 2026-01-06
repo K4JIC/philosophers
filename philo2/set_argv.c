@@ -6,7 +6,7 @@
 /*   By: tozaki <tozaki@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/23 15:27:14 by tozaki            #+#    #+#             */
-/*   Updated: 2025/12/28 19:23:12 by tozaki           ###   ########.fr       */
+/*   Updated: 2026/01/06 18:42:29 by tozaki           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,11 +58,11 @@ int	set_argv(int argc, char **argv, t_input_info *iinfo)
 {
 	if (validate_atoi(&(iinfo->philo_max), argv[1]) == FAIL)
 		return (FAIL);
-	if (validate_atoi(&(iinfo->time_to_die), argv[2]) == FAIL)
+	if (validate_atoi(&(iinfo->time_to_die_ms), argv[2]) == FAIL)
 		return (FAIL);
-	if (validate_atoi(&(iinfo->time_to_eat), argv[3]) == FAIL)
+	if (validate_atoi(&(iinfo->time_to_eat_ms), argv[3]) == FAIL)
 		return (FAIL);
-	if (validate_atoi(&(iinfo->time_to_sleep), argv[4]) == FAIL)
+	if (validate_atoi(&(iinfo->time_to_sleep_ms), argv[4]) == FAIL)
 		return (FAIL);
 	if (argc == 6)
 	{

@@ -6,7 +6,7 @@
 /*   By: tozaki <tozaki@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/28 18:58:12 by tozaki            #+#    #+#             */
-/*   Updated: 2025/12/28 21:00:32 by tozaki           ###   ########.fr       */
+/*   Updated: 2026/01/06 18:43:10 by tozaki           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,11 +18,13 @@ static int	set_one_thread_info(t_thread_info *tinfo, t_master *master,
 	tinfo->start_time = start_time;
 	tinfo->philo_num = philo_num;
 	tinfo->philo_max = master->iinfo.philo_max;
-	tinfo->time_to_die = master->iinfo.time_to_die;
-	tinfo->time_to_eat = master->iinfo.time_to_eat;
-	tinfo->time_to_sleep = master->iinfo.time_to_sleep;
-	tinfo->time_to_think = tinfo->time_to_die - tinfo->time_to_eat
-						- tinfo->time_to_sleep;
+	tinfo->time_to_die_ms = master->iinfo.time_to_die_ms;
+	tinfo->time_to_eat_ms = master->iinfo.time_to_eat_ms;
+	tinfo->time_to_sleep_ms = master->iinfo.time_to_sleep_ms;
+	tinfo->time_to_think_ms = tinfo->time_to_die_ms - tinfo->time_to_eat_ms
+						- tinfo->time_to_sleep_ms;
+	if (tinfo->time_to_think_ms < 0)
+		tinfo->time_to_think_ms = 0;
 	tinfo->rfork_lock =
 		&master->mutexes.forks_lock[philo_num % master->iinfo.philo_max];
 	tinfo->lfork_lock =

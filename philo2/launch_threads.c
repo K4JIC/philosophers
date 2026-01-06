@@ -6,13 +6,14 @@
 /*   By: tozaki <tozaki@student.42.jp>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/28 20:20:22 by tozaki            #+#    #+#             */
-/*   Updated: 2025/12/28 21:00:07 by tozaki           ###   ########.fr       */
+/*   Updated: 2026/01/06 16:52:43 by tozaki           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 #include <stdio.h>
 
+/*
 void	*philo_routine(void *info)
 {
 	t_thread_info	tinfo;
@@ -22,6 +23,7 @@ void	*philo_routine(void *info)
 	printf("This is %d philo.\n", tinfo.philo_num);
 	pthread_mutex_unlock(tinfo.write_lock);
 }
+*/
 
 static int	launch_one_thread(t_master master, int philo_num)
 {

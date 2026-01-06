@@ -1,4 +1,4 @@
-/* ************************************************************************** */
+
 /*                                                                            */
 /*                                                        :::      ::::::::   */
 /*   philo.h                                            :+:      :+:    :+:   */
@@ -6,7 +6,7 @@
 /*   By: tozaki <tozaki@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/28 17:41:08 by tozaki            #+#    #+#             */
-/*   Updated: 2025/12/28 21:18:39 by tozaki           ###   ########.fr       */
+/*   Updated: 2026/01/06 19:58:55 by tozaki           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,13 +18,14 @@
 
 # define SUCCESS 0
 # define FAIL 1
+# define SEC_USEC 1000000
 
 typedef struct s_input_info
 {
 	int	philo_max;
-	int	time_to_die;
-	int	time_to_eat;
-	int	time_to_sleep;
+	int	time_to_die_ms;
+	int	time_to_eat_ms;
+	int	time_to_sleep_ms;
 	int	philo_must_eat;
 }		t_input_info;
 
@@ -37,17 +38,18 @@ typedef struct s_mutexes
 
 typedef struct s_thread_info
 {
-	struct timeval	start_time;
-	int				philo_num;
-	int				philo_max;
-	int				time_to_die;
-	int				time_to_eat;
-	int				time_to_sleep;
-	int				time_to_think;
-	pthread_mutex_t	*rfork_lock;
-	pthread_mutex_t	*lfork_lock;
-	pthread_mutex_t	*write_lock;
-	pthread_mutex_t	*death_lock;
+	struct timeval		start_time;
+	unsigned long long	last_eat;
+	int					philo_num;
+	int					philo_max;
+	int					time_to_die_ms;
+	int					time_to_eat_ms;
+	int					time_to_sleep_ms;
+	int					time_to_think_ms;
+	pthread_mutex_t		*rfork_lock;
+	pthread_mutex_t		*lfork_lock;
+	pthread_mutex_t		*write_lock;
+	pthread_mutex_t		*death_lock;
 }					t_thread_info;
 
 typedef struct s_master
@@ -73,6 +75,9 @@ void	destroy_mutexes(t_mutexes *mutex, int philo_max);
 
 /*set_thread_info.c*/
 int		set_threads_info(t_master *master);
+
+/*routine.c*/
+void	*philo_routine(void *info);
 
 /*launch_threads.c*/
 int		launch_threads(t_master master);
