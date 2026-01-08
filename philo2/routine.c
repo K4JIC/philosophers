@@ -6,7 +6,7 @@
 /*   By: tozaki <tozaki@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/06 15:16:19 by tozaki            #+#    #+#             */
-/*   Updated: 2026/01/06 19:58:15 by tozaki           ###   ########.fr       */
+/*   Updated: 2026/01/08 18:42:42 by tozaki           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,20 +34,28 @@ void	philo_write(t_thread_info tinfo, char *msg)
 	utime = get_time_us(tinfo);
 	mtime = utime / 1000;
 	pthread_mutex_lock(tinfo.write_lock);
-	printf("%04lld %d %s.\n", mtime, tinfo.philo_num, msg);
+	printf("%04lld %d %s\n", mtime, tinfo.philo_num, msg);
 	pthread_mutex_unlock(tinfo.write_lock);
 }
 
-void	death_check(t_thread_info tinfo)
+int	death_check(t_thread_info tinfo)
 {
 	unsigned long long	now_time_us;
 
 	now_time_us = get_time_us(tinfo);
 	if (now_time_us / 1000 < tinfo.time_to_die_ms)
 	{
+		
 		pthread_mutex_lock(tinfo.death_lock);
-
 		pthread_mutex_unlock(tinfo.death_lock);
+	}
+	else
+	{
+		pthread_mutex_lock(tinfo.death_lock);
+		return (FAIL);
+	}
+
+}
 
 void	philo_eat(t_thread_info tinfo)
 {
