@@ -5,8 +5,8 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: tozaki <tozaki@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/01/06 15:16:19 by tozaki            #+#    #+#             */
-/*   Updated: 2026/01/08 18:42:42 by tozaki           ###   ########.fr       */
+/*   Created: 2026/01/09 12:17:39 by tozaki            #+#    #+#             */
+/*   Updated: 2026/01/09 20:20:42 by tozaki           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,23 +38,20 @@ void	philo_write(t_thread_info tinfo, char *msg)
 	pthread_mutex_unlock(tinfo.write_lock);
 }
 
-int	death_check(t_thread_info tinfo)
+int	check_death(t_thread_info tinfo)
 {
 	unsigned long long	now_time_us;
 
 	now_time_us = get_time_us(tinfo);
 	if (now_time_us / 1000 < tinfo.time_to_die_ms)
-	{
-		
-		pthread_mutex_lock(tinfo.death_lock);
-		pthread_mutex_unlock(tinfo.death_lock);
-	}
+		;
 	else
 	{
-		pthread_mutex_lock(tinfo.death_lock);
+		*tinfo.Im_died = 1;
+		philo_write(tinfo, "died");
 		return (FAIL);
 	}
-
+	return (SUCCESS);
 }
 
 void	philo_eat(t_thread_info tinfo)
@@ -92,8 +89,11 @@ void	*philo_routine(void *info)
 		while (1)
 		{
 			philo_eat(tinfo);
+			check_death(tinfo);
 			philo_sleep(tinfo);
+			check_death(tinfo);
 			philo_think(tinfo);
+			check_death(tinfo);
 		}
 	}
 	else
@@ -101,8 +101,12 @@ void	*philo_routine(void *info)
 		while (1)
 		{
 			philo_sleep(tinfo);
+			check_death(tinfo);
 			philo_eat(tinfo);
+			check_death(tinfo);
 			philo_think(tinfo);
+			check_death(tinfo);
 		}
 	}
+	return (NULL);
 }

@@ -6,7 +6,7 @@
 /*   By: tozaki <tozaki@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/28 18:09:42 by tozaki            #+#    #+#             */
-/*   Updated: 2025/12/28 21:16:26 by tozaki           ###   ########.fr       */
+/*   Updated: 2026/01/09 19:58:17 by tozaki           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,8 @@ void	wait_threads(t_master master)
 	i = 0;
 	while (i < master.iinfo.philo_max)
 	{
-		pthread_join(master.threads[i], NULL);
+		pthread_detach(master.threads[i]);
+//		pthread_join(master.threads[i], NULL);
 		i++;
 	}
 }
@@ -39,9 +40,10 @@ int	main(int argc, char **argv)
 	set_mutexes(&master.mutexes, master.iinfo.philo_max);
 	if (set_threads_info(&master) == FAIL)
 		return (gettime_error(&master));
-	if (launch_threads(master) == FAIL)
+	if (launch_threads(&master) == FAIL)
 		return (threads_error(&master));
 	wait_threads(master);
+	pthread_join(*master.observe_thread, NULL);
 	destroy_mutexes(&master.mutexes, master.iinfo.philo_max);
 	free_master(&master);
 }

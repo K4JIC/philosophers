@@ -6,7 +6,7 @@
 /*   By: tozaki <tozaki@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/28 18:58:12 by tozaki            #+#    #+#             */
-/*   Updated: 2026/01/06 18:43:10 by tozaki           ###   ########.fr       */
+/*   Updated: 2026/01/09 19:56:54 by tozaki           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,7 @@ static int	set_one_thread_info(t_thread_info *tinfo, t_master *master,
 		&master->mutexes.forks_lock[(philo_num + 1) % master->iinfo.philo_max];
 	tinfo->write_lock = &master->mutexes.write_lock;
 	tinfo->death_lock = &master->mutexes.death_lock;
+	tinfo->Im_died = &master->someone_died[philo_num];
 	return (SUCCESS);
 }
 
@@ -49,5 +50,4 @@ int	set_threads_info(t_master *master)
 	}
 	return (SUCCESS);
 }
-
 

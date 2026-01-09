@@ -6,7 +6,7 @@
 /*   By: tozaki <tozaki@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/28 18:18:39 by tozaki            #+#    #+#             */
-/*   Updated: 2025/12/28 20:43:19 by tozaki           ###   ########.fr       */
+/*   Updated: 2026/01/09 20:10:58 by tozaki           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,9 @@ int	set_malloc(t_master *master)
 						master->iinfo.philo_max);
 	if (!master->threads)
 		return (FAIL);
+	master->observe_thread = malloc(sizeof(pthread_t));
+	if (!master->observe_thread)
+		return (free_master(master), FAIL);
 	master->threads_info = malloc(sizeof(t_thread_info) *
 						master->iinfo.philo_max);
 	if (!master->threads_info)
@@ -29,6 +32,10 @@ int	set_malloc(t_master *master)
 						master->iinfo.philo_max);
 	if (!master->mutexes.forks_lock)
 		return (free_master(master), FAIL);
+	master->someone_died = malloc(sizeof(int) *
+						master->iinfo.philo_max);
+	if (!master->someone_died)
+		return (free_master(master), FAIL);
 	return (SUCCESS);
 }
 
@@ -36,8 +43,12 @@ void	free_master(t_master *master)
 {
 	if (master->threads)
 		free(master->threads);
+	if (master->observe_thread)
+		free(master->observe_thread);
 	if (master->threads_info)
 		free(master->threads_info);
 	if (master->mutexes.forks_lock)
 		free(master->mutexes.forks_lock);
+	if (master->someone_died)
+		free(master->someone_died);
 }

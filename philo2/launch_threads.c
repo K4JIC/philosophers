@@ -6,7 +6,7 @@
 /*   By: tozaki <tozaki@student.42.jp>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/28 20:20:22 by tozaki            #+#    #+#             */
-/*   Updated: 2026/01/06 16:52:43 by tozaki           ###   ########.fr       */
+/*   Updated: 2026/01/09 20:15:42 by tozaki           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,23 +25,55 @@ void	*philo_routine(void *info)
 }
 */
 
-static int	launch_one_thread(t_master master, int philo_num)
+static int	launch_one_thread(t_master *master, int philo_num)
 {
-	if (pthread_create(&(master.threads[philo_num]),
+	if (pthread_create(&(master->threads[philo_num]),
 						NULL,
 						philo_routine,
-						&(master.threads_info[philo_num]))
+						&(master->threads_info[philo_num]))
 		== FAIL)
 		return (FAIL);
 	return (SUCCESS);
 }
 
-int	launch_threads(t_master master)
+void	*observe_routine(void *master_void)
+{
+	t_master	*master;
+	int			i;
+
+	master = (t_master *)master_void;
+	i = 0;
+	while (1)
+	{
+		while (master->someone_died[i])
+		{
+			if (master->someone_died[i] == 1)
+				return (NULL);
+			i++;
+		}
+	}
+	return (NULL);
+}
+
+static int	launch_observe_thread(t_master *master)
+{
+	if (pthread_create(master->observe_thread,
+						NULL,
+						observe_routine,
+						(void *)master)
+		== FAIL)
+		return (FAIL);
+	return (SUCCESS);
+}
+
+int	launch_threads(t_master *master)
 {
 	int	i;
 
+	if (launch_observe_thread(master) == FAIL)
+		return (FAIL);
 	i = 0;
-	while (i < master.iinfo.philo_max)
+	while (i < master->iinfo.philo_max)
 	{
 		if (launch_one_thread(master, i) == FAIL)
 			return (FAIL);
