@@ -6,7 +6,7 @@
 /*   By: tozaki <tozaki@student.42.jp>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/28 20:20:22 by tozaki            #+#    #+#             */
-/*   Updated: 2026/01/09 20:15:42 by tozaki           ###   ########.fr       */
+/*   Updated: 2026/01/10 14:35:51 by tozaki           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,9 +39,11 @@ static int	launch_one_thread(t_master *master, int philo_num)
 void	*observe_routine(void *master_void)
 {
 	t_master	*master;
+	int			philo_max;
 	int			i;
 
 	master = (t_master *)master_void;
+	philo_max = master->iinfo.philo_max;
 	i = 0;
 	while (1)
 	{
@@ -49,7 +51,7 @@ void	*observe_routine(void *master_void)
 		{
 			if (master->someone_died[i] == 1)
 				return (NULL);
-			i++;
+			i = (i + 1) % philo_max;
 		}
 	}
 	return (NULL);

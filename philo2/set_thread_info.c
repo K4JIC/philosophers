@@ -6,7 +6,7 @@
 /*   By: tozaki <tozaki@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/28 18:58:12 by tozaki            #+#    #+#             */
-/*   Updated: 2026/01/09 19:56:54 by tozaki           ###   ########.fr       */
+/*   Updated: 2026/01/10 13:56:59 by tozaki           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ static int	set_one_thread_info(t_thread_info *tinfo, t_master *master,
 	tinfo->time_to_eat_ms = master->iinfo.time_to_eat_ms;
 	tinfo->time_to_sleep_ms = master->iinfo.time_to_sleep_ms;
 	tinfo->time_to_think_ms = tinfo->time_to_die_ms - tinfo->time_to_eat_ms
-						- tinfo->time_to_sleep_ms;
+						- tinfo->time_to_sleep_ms - 1;
 	if (tinfo->time_to_think_ms < 0)
 		tinfo->time_to_think_ms = 0;
 	tinfo->rfork_lock =
