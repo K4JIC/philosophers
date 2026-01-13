@@ -44,7 +44,7 @@ static int	validate_atoi(int *integer, char *ascii)
 		i++;
 	}
 	if (!ft_isnum(ascii[i]))
-		return (FAIL);
+		return (FAILURE);
 	while (ft_isnum(ascii[i]))
 	{
 		res = res * 10 + (ascii[i] - '0');
@@ -56,18 +56,18 @@ static int	validate_atoi(int *integer, char *ascii)
 
 int	set_argv(int argc, char **argv, t_input_info *iinfo)
 {
-	if (validate_atoi(&(iinfo->philo_max), argv[1]) == FAIL)
-		return (FAIL);
-	if (validate_atoi(&(iinfo->time_to_die_ms), argv[2]) == FAIL)
-		return (FAIL);
-	if (validate_atoi(&(iinfo->time_to_eat_ms), argv[3]) == FAIL)
-		return (FAIL);
-	if (validate_atoi(&(iinfo->time_to_sleep_ms), argv[4]) == FAIL)
-		return (FAIL);
+	if (validate_atoi(&(iinfo->philo_max), argv[1]) == FAILURE)
+		return (FAILURE);
+	if (validate_atoi(&(iinfo->time_to_die_ms), argv[2]) == FAILURE)
+		return (FAILURE);
+	if (validate_atoi(&(iinfo->time_to_eat_ms), argv[3]) == FAILURE)
+		return (FAILURE);
+	if (validate_atoi(&(iinfo->time_to_sleep_ms), argv[4]) == FAILURE)
+		return (FAILURE);
 	if (argc == 6)
 	{
-		if (validate_atoi(&(iinfo->philo_must_eat), argv[5]) == FAIL)
-			return (FAIL);
+		if (validate_atoi(&(iinfo->philo_must_eat), argv[5]) == FAILURE)
+			return (FAILURE);
 	}
 	return (SUCCESS);
 }

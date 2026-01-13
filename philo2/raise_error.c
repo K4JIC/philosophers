@@ -18,12 +18,12 @@ static int	ft_puterrmsg(char *errmsg)
 	int	mlen;
 
 	if (!errmsg)
-		return (FAIL);
+		return (FAILURE);
 	mlen = 0;
 	while (errmsg[mlen])
 		mlen++;
 	if (write(2, errmsg, mlen) == -1)
-		return (FAIL);
+		return (FAILURE);
 	return (SUCCESS);
 }
 
@@ -41,15 +41,15 @@ int	input_error(t_master *master)
 
 int	malloc_error(t_master *master)
 {
-	return (raise_error(master, "Error : malloc() failed.\n"));
+	return (raise_error(master, "Error : malloc() FAILUREed.\n"));
 }
 
 int	gettime_error(t_master *master)
 {
-	return (raise_error(master, "Error : gettimeofday() failed.\n"));
+	return (raise_error(master, "Error : gettimeofday() FAILUREed.\n"));
 }
 
 int	threads_error(t_master *master)
 {
-	return (raise_error(master, "Error : Failed to launch threads.\n"));
+	return (raise_error(master, "Error : FAILUREed to launch threads.\n"));
 }

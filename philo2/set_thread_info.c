@@ -12,10 +12,10 @@
 
 #include "philo.h"
 
-static int	set_one_thread_info(t_thread_info *tinfo, t_master *master,
-		int philo_num, struct timeval start_time)
+static void	set_one_thread_info(t_thread_info *tinfo, t_master *master,
+		int philo_num, unsigned long long start_time_us)
 {
-	tinfo->start_time = start_time;
+	tinfo->start_time_us = start_time_us;
 	tinfo->philo_num = philo_num;
 	tinfo->philo_max = master->iinfo.philo_max;
 	tinfo->time_to_die_ms = master->iinfo.time_to_die_ms;
@@ -32,22 +32,20 @@ static int	set_one_thread_info(t_thread_info *tinfo, t_master *master,
 	tinfo->write_lock = &master->mutexes.write_lock;
 	tinfo->death_lock = &master->mutexes.death_lock;
 	tinfo->Im_died = &master->someone_died[philo_num];
-	return (SUCCESS);
 }
 
 int	set_threads_info(t_master *master)
 {
-	struct timeval	start_time;
-	int				i;
+	unsigned long long	start_time_us;
+	int					i;
 
-	if (gettimeofday(&start_time, NULL) == -1)
-		return (FAIL);
+	if (get_time_us(&start_time_us) == FAILURE)
+		return (FAILURE);
 	i = 0;
 	while (i < master->iinfo.philo_max)
 	{
-		set_one_thread_info(&master->threads_info[i], master, i, start_time);
+		set_one_thread_info(&master->threads_info[i], master, i, start_time_us);
 		i++;
 	}
 	return (SUCCESS);
 }
-

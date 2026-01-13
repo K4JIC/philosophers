@@ -6,7 +6,7 @@
 /*   By: tozaki <tozaki@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/09 12:54:47 by tozaki            #+#    #+#             */
-/*   Updated: 2026/01/09 19:57:55 by tozaki           ###   ########.fr       */
+/*   Updated: 2026/01/11 16:56:17 by tozaki           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,10 +15,18 @@
 
 # include <pthread.h>
 # include <sys/time.h>
+# include <unistd.h>
 
 # define SUCCESS 0
-# define FAIL 1
-# define SEC_USEC 1000000
+# define FAILURE 1
+# define SEC_TO_USEC 1000000
+
+enum error_identifier
+{
+	GETTIMEERROR,
+	INPUTERROR,
+	MALLOCERROR
+};
 
 typedef struct s_input_info
 {
@@ -38,8 +46,8 @@ typedef struct s_mutexes
 
 typedef struct s_thread_info
 {
-	struct timeval		start_time;
-	unsigned long long	last_eat;
+	unsigned long long	start_time_us;
+	unsigned long long	last_eat_us;
 	int					philo_num;
 	int					philo_max;
 	int					time_to_die_ms;
@@ -51,17 +59,18 @@ typedef struct s_thread_info
 	pthread_mutex_t		*write_lock;
 	pthread_mutex_t		*death_lock;
 	int					*Im_died;
-}					t_thread_info;
+}						t_thread_info;
 
 typedef struct s_master
 {
-	t_input_info	iinfo;
-	t_mutexes		mutexes;
-	pthread_t		*threads;
-	pthread_t		*observe_thread;
-	t_thread_info	*threads_info;
-	int				philo_must_eat;
-	int				*someone_died;
+	t_input_info		iinfo;
+	t_mutexes			mutexes;
+	pthread_t			*threads;
+	pthread_t			*observe_thread;
+	unsigned long long	term_time_us;
+	t_thread_info		*threads_info;
+	int					philo_must_eat;
+	int					*someone_died;
 }					t_master;
 
 /*set_argv.c*/
@@ -80,6 +89,7 @@ int		set_threads_info(t_master *master);
 
 /*routine.c*/
 void	*philo_routine(void *info);
+void	*observe_routine(void *master_void);
 
 /*launch_threads.c*/
 int		launch_threads(t_master *master);
@@ -89,5 +99,10 @@ int	input_error(t_master *master);
 int	malloc_error(t_master *master);
 int	gettime_error(t_master *master);
 int	threads_error(t_master *master);
+
+/*time_utils.c */
+int	get_time_us(unsigned long long *time_us);
+int	get_time_duration_us(unsigned long long *time_us,
+						unsigned long long start_time_us);
 
 #endif
