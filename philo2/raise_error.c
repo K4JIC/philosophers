@@ -1,7 +1,7 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   raise_error.c                                      :+:      :+:    :+:   */
+/*   raise_error_and_exit.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: tozaki <tozaki@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
@@ -27,7 +27,7 @@ static int	ft_puterrmsg(char *errmsg)
 	return (SUCCESS);
 }
 
-static int	raise_error(t_master *master, char *errmsg)
+static int	raise_error_and_exit(t_master *master, char *errmsg)
 {
 	free_master(master);
 	ft_puterrmsg(errmsg);
@@ -36,20 +36,20 @@ static int	raise_error(t_master *master, char *errmsg)
 
 int	input_error(t_master *master)
 {
-	return (raise_error(master, "Error : Forbidden input.\n"));
+	return (raise_error_and_exit(master, "Error : Forbidden input.\n"));
 }
 
 int	malloc_error(t_master *master)
 {
-	return (raise_error(master, "Error : malloc() FAILUREed.\n"));
+	return (raise_error_and_exit(master, "Error : malloc() FAILUREed.\n"));
 }
 
 int	gettime_error(t_master *master)
 {
-	return (raise_error(master, "Error : gettimeofday() FAILUREed.\n"));
+	return (raise_error_and_exit(master, "Error : gettimeofday() FAILUREed.\n"));
 }
 
 int	threads_error(t_master *master)
 {
-	return (raise_error(master, "Error : FAILUREed to launch threads.\n"));
+	return (raise_error_and_exit(master, "Error : FAILUREed to launch threads.\n"));
 }
