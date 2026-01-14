@@ -24,15 +24,13 @@ void	*philo_routine(void *info)
 		{
 			if (philo_eat(tinfo) == FAILURE)
 			{
-				philo_write(tinfo, "finish\n");
+				// philo_write(tinfo, "finish\n");
 				return (NULL);
 			}
 			if (philo_sleep(tinfo) == FAILURE)
 				return (NULL);
-			philo_write(tinfo, "b\n");
 			if (philo_think(tinfo) == FAILURE)
 				return (NULL);
-			philo_write(tinfo, "c\n");
 		}
 	}
 	else
@@ -41,15 +39,13 @@ void	*philo_routine(void *info)
 		{
 			if (philo_sleep(tinfo) == FAILURE)
 			{
-				philo_write(tinfo, "finish\n");
+				// philo_write(tinfo, "finish\n");
 				return (NULL);
 			}
 			if (philo_think(tinfo) == FAILURE)
 				return (NULL);
-			philo_write(tinfo, "c\n");
 			if (philo_eat(tinfo) == FAILURE)
 				return (NULL);
-			philo_write(tinfo, "a\n");
 		}
 	}
 	return (NULL);

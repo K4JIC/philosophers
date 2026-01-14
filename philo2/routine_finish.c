@@ -21,11 +21,11 @@ static int	is_alive(t_thread_info *tinfo)
 		return (GET_TIME_ERROR);
 	if (hungry_time_us / 1000 > (unsigned long long)tinfo->time_to_die_ms)
 	{
-		printf("%d ", tinfo->philo_num);
-		printf("hungry = %lld\n", hungry_time_us);
-		printf("%d ", tinfo->philo_num);
-		printf("last_eat = %lld\n", tinfo->last_eat_us);
-		philo_write(tinfo, "is_alive() fail");
+		// printf("%d ", tinfo->philo_num);
+		// printf("hungry = %lld\n", hungry_time_us);
+		// printf("%d ", tinfo->philo_num);
+		// printf("last_eat = %lld\n", tinfo->last_eat_us);
+		// philo_write(tinfo, "is_alive() fail");
 		*tinfo->Im_died = 1;
 		return (0);
 	}
@@ -38,7 +38,7 @@ static int	is_full(t_thread_info *tinfo)
 		return (0);
 	if (tinfo->eat_count >= tinfo->must_eat)
 	{
-		philo_write(tinfo, "is_full() fail");
+		// philo_write(tinfo, "is_full() fail");
 		return (1);
 	}
 	return (0);
@@ -53,7 +53,7 @@ static int	thread_is_finished(t_thread_info *tinfo)
 		return (GET_TIME_ERROR);
 	if (is_full(tinfo) || !isalive)
 	{
-		philo_write(tinfo, "thread_is_finished() fail");
+		// philo_write(tinfo, "thread_is_finished() fail");
 		pthread_mutex_lock(tinfo->flag_lock);
 		*tinfo->finish_flag = 1;
 		pthread_mutex_unlock(tinfo->flag_lock);
@@ -71,7 +71,7 @@ int	is_finished(t_thread_info *tinfo)
 		return (GET_TIME_ERROR);
 	if (thisfinished)
 	{
-		philo_write(tinfo, "is_finished() fail");
+		// philo_write(tinfo, "is_finished() fail");
 		return (FAILURE);
 	}
 	if (process_is_finished(tinfo))
