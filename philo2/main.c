@@ -44,6 +44,8 @@ int	main(int argc, char **argv)
 	memset(&master, 0, sizeof(t_master));
 	if (argc != 5 && argc != 6)
 		return (input_error(&master));
+	if (argc == 6)
+		master.must_eat_option = 1;
 	if (set_argv(argc, argv, &master.iinfo) == FAILURE)
 		return (input_error(&master));
 	if (set_malloc(&master) == FAILURE)

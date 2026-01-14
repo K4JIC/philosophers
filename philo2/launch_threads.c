@@ -13,18 +13,6 @@
 #include "philo.h"
 #include <stdio.h>
 
-/*
-void	*philo_routine(void *info)
-{
-	t_thread_info	tinfo;
-
-	tinfo = *(t_thread_info *)info;
-	pthread_mutex_lock(tinfo.write_lock);
-	printf("This is %d philo.\n", tinfo.philo_num);
-	pthread_mutex_unlock(tinfo.write_lock);
-}
-*/
-
 static int	launch_one_thread(t_master *master, int philo_num)
 {
 	if (pthread_create(&(master->threads[philo_num]),
@@ -35,7 +23,6 @@ static int	launch_one_thread(t_master *master, int philo_num)
 		return (FAILURE);
 	return (SUCCESS);
 }
-
 
 static int	launch_observe_thread(t_master *master)
 {

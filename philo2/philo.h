@@ -17,6 +17,8 @@
 # include <sys/time.h>
 # include <unistd.h>
 # include <string.h>
+# include <pthread.h>
+# include <stdio.h>
 
 # define SUCCESS 0
 # define FAILURE 1
@@ -49,6 +51,7 @@ typedef struct s_thread_info
 {
 	unsigned long long	start_time_us;
 	unsigned long long	last_eat_us;
+	unsigned long long	unit_time_us;
 	int					philo_num;
 	int					philo_max;
 	int					time_to_die_ms;
@@ -61,6 +64,7 @@ typedef struct s_thread_info
 	pthread_mutex_t		*flag_lock;
 	int					*finish_flag;
 	int					*Im_died;
+	int					must_eat_option;
 	int					must_eat;
 	int					eat_count;
 }						t_thread_info;
@@ -76,6 +80,7 @@ typedef struct s_master
 	int					philo_must_eat;
 	int					*someone_died;
 	int					finish_flag;
+	int					must_eat_option;
 }					t_master;
 
 /*set_argv.c*/
@@ -92,9 +97,18 @@ void	destroy_mutexes(t_mutexes *mutex, int philo_max);
 /*set_thread_info.c*/
 int		set_threads_info(t_master *master);
 
+/*routine_finish.c*/
+int	is_finished(t_thread_info *tinfo);
+
+/*routine_action.c*/
+int	philo_eat(t_thread_info *tinfo);
+int	philo_sleep(t_thread_info *tinfo);
+int	philo_think(t_thread_info *tinfo);
+
 /*routine.c*/
 void	*philo_routine(void *info);
 void	*observe_routine(void *master_void);
+int	philo_write(t_thread_info *tinfo, char *msg);// 後で消す
 
 /*launch_threads.c*/
 int		launch_threads(t_master *master);

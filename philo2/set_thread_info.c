@@ -12,6 +12,18 @@
 
 #include "philo.h"
 
+static unsigned long long	ft_min(unsigned long long a, unsigned long long b, unsigned long long c)
+{
+	unsigned long long	min;
+
+	min = a;
+	if (min > b)
+		min = b;
+	if (min > c)
+		min = c;
+	return (min);
+}
+
 static void	set_one_thread_info(t_master *master,
 		int philo_num, unsigned long long start_time_us)
 {
@@ -20,6 +32,8 @@ static void	set_one_thread_info(t_master *master,
 	tinfo = &master->threads_info[philo_num];
 	memset(tinfo, 0, sizeof(t_thread_info));
 	tinfo->start_time_us = start_time_us;
+	tinfo->last_eat_us = start_time_us;
+	tinfo->unit_time_us = ft_min(master->iinfo.time_to_die_ms, master->iinfo.time_to_eat_ms, master->iinfo.time_to_sleep_ms);
 	tinfo->philo_num = philo_num;
 	tinfo->philo_max = master->iinfo.philo_max;
 	tinfo->time_to_die_ms = master->iinfo.time_to_die_ms;
@@ -38,6 +52,7 @@ static void	set_one_thread_info(t_master *master,
 	tinfo->Im_died = &master->someone_died[philo_num];
 	tinfo->must_eat = master->philo_must_eat;
 	tinfo->finish_flag = &master->finish_flag;
+	tinfo->must_eat_option = master->must_eat_option;
 }
 
 int	set_threads_info(t_master *master)

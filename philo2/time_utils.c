@@ -26,7 +26,7 @@ int	get_time_us(unsigned long long *time_us)
 	struct timeval		tv;
 
 	if (gettimeofday(&tv, NULL) == -1)
-		return (FAILURE);
+		return (GET_TIME_ERROR);
 	*time_us = convert_tv_to_ull(tv);
 	return (SUCCESS);
 }
@@ -36,8 +36,8 @@ int	get_time_duration_us(unsigned long long *time_us,
 {
 	unsigned long long	now_time_us;
 
-	if (get_time_us(&now_time_us) == FAILURE)
-		return (FAILURE);
+	if (get_time_us(&now_time_us) == GET_TIME_ERROR)
+		return (GET_TIME_ERROR);
 	*time_us = now_time_us - start_time_us;
 	return (SUCCESS);
 }
