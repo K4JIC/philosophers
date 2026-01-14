@@ -12,9 +12,13 @@
 
 #include "philo.h"
 
-static void	set_one_thread_info(t_thread_info *tinfo, t_master *master,
+static void	set_one_thread_info(t_master *master,
 		int philo_num, unsigned long long start_time_us)
 {
+	t_thread_info	*tinfo;
+
+	tinfo = &master->threads_info[philo_num];
+	memset(tinfo, 0, sizeof(t_thread_info));
 	tinfo->start_time_us = start_time_us;
 	tinfo->philo_num = philo_num;
 	tinfo->philo_max = master->iinfo.philo_max;
@@ -30,8 +34,10 @@ static void	set_one_thread_info(t_thread_info *tinfo, t_master *master,
 	tinfo->lfork_lock =
 		&master->mutexes.forks_lock[(philo_num + 1) % master->iinfo.philo_max];
 	tinfo->write_lock = &master->mutexes.write_lock;
-	tinfo->death_lock = &master->mutexes.death_lock;
+	tinfo->flag_lock = &master->mutexes.flag_lock;
 	tinfo->Im_died = &master->someone_died[philo_num];
+	tinfo->must_eat = master->philo_must_eat;
+	tinfo->finish_flag = &master->finish_flag;
 }
 
 int	set_threads_info(t_master *master)
@@ -44,7 +50,7 @@ int	set_threads_info(t_master *master)
 	i = 0;
 	while (i < master->iinfo.philo_max)
 	{
-		set_one_thread_info(&master->threads_info[i], master, i, start_time_us);
+		set_one_thread_info(master, i, start_time_us);
 		i++;
 	}
 	return (SUCCESS);

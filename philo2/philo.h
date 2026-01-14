@@ -16,6 +16,7 @@
 # include <pthread.h>
 # include <sys/time.h>
 # include <unistd.h>
+# include <string.h>
 
 # define SUCCESS 0
 # define FAILURE 1
@@ -23,7 +24,7 @@
 
 enum error_identifier
 {
-	GETTIMEERROR,
+	GET_TIME_ERROR=-1,
 	INPUTERROR,
 	MALLOCERROR
 };
@@ -41,7 +42,7 @@ typedef struct s_mutexes
 {
 	pthread_mutex_t	*forks_lock;
 	pthread_mutex_t	write_lock;
-	pthread_mutex_t	death_lock;
+	pthread_mutex_t	flag_lock;
 }						t_mutexes;
 
 typedef struct s_thread_info
@@ -57,8 +58,11 @@ typedef struct s_thread_info
 	pthread_mutex_t		*rfork_lock;
 	pthread_mutex_t		*lfork_lock;
 	pthread_mutex_t		*write_lock;
-	pthread_mutex_t		*death_lock;
+	pthread_mutex_t		*flag_lock;
+	int					*finish_flag;
 	int					*Im_died;
+	int					must_eat;
+	int					eat_count;
 }						t_thread_info;
 
 typedef struct s_master
@@ -71,6 +75,7 @@ typedef struct s_master
 	t_thread_info		*threads_info;
 	int					philo_must_eat;
 	int					*someone_died;
+	int					finish_flag;
 }					t_master;
 
 /*set_argv.c*/

@@ -21,8 +21,7 @@ void	wait_threads(t_master *master)
 	i = 0;
 	while (i < master->iinfo.philo_max)
 	{
-		pthread_detach(master->threads[i]);
-//		pthread_join(master.threads[i], NULL);
+		pthread_join(master->threads[i], NULL);
 		i++;
 	}
 }
