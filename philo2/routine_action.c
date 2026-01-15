@@ -1,29 +1,14 @@
 #include "philo.h"
 #include <unistd.h>
 
-int	philo_usleep(t_thread_info *tinfo, time_t wait_time_us)
+int	philo_self_funeral(t_thread_info *tinfo, int remaining_life_us, char *reserved_msg)
 {
-	unsigned long long	unit_time_us;
-	unsigned long long	unit_quotient;
-	unsigned long long	unit_remainder;
 	unsigned long long	i;
-	int					isfinished;
 
-	unit_time_us = 50;
-	unit_quotient = wait_time_us / unit_time_us;
-	unit_remainder = wait_time_us % unit_time_us;
-	i = 0;
-	while (i < unit_quotient)
-	{
-		isfinished = is_finished(tinfo);
-		if (isfinished == GET_TIME_ERROR)
-			return (GET_TIME_ERROR);
-		if (isfinished)
-			return (FAILURE);
-		usleep(unit_time_us);
-		i++;
-	}
-	usleep(unit_remainder);
+	if (philo_write(tinfo, reserved_msg))
+		return (FAILURE);
+	usleep(remaining_life_us);
+	*tinfo->Im_died = 1;
 	return (SUCCESS);
 }
 
@@ -53,14 +38,6 @@ int	philo_eat(t_thread_info *tinfo)
 		return (GET_TIME_ERROR);
 	if (philo_write(tinfo, "is eating") == GET_TIME_ERROR)
 		return (GET_TIME_ERROR);
-	// wait_ret = philo_usleep(tinfo, tinfo->time_to_eat_ms * 1000);
-	// if (wait_ret == GET_TIME_ERROR)
-		// return (GET_TIME_ERROR);
-	// if (wait_ret == FAILURE)
-	// {
-		// philo_write(tinfo, "waitret_fail");
-		// return (FAILURE);
-	// }
 	usleep(tinfo->time_to_die_ms * 1000);
 	tinfo->eat_count++;
 	pthread_mutex_unlock(tinfo->rfork_lock);
@@ -74,11 +51,6 @@ int	philo_sleep(t_thread_info *tinfo)
 
 	if (philo_write(tinfo, "is sleeping") == GET_TIME_ERROR)
 		return (GET_TIME_ERROR);
-	// wait_ret = philo_usleep(tinfo, tinfo->time_to_sleep_ms * 1000);
-	// if (wait_ret == GET_TIME_ERROR)
-		// return (GET_TIME_ERROR);
-	// if (wait_ret == FAILURE)
-		// return (FAILURE);
 	usleep(tinfo->time_to_sleep_ms * 1000);
 	return (SUCCESS);
 }
@@ -89,11 +61,6 @@ int	philo_think(t_thread_info *tinfo)
 
 	if (philo_write(tinfo, "is thinking") == FAILURE)
 		return (FAILURE);
-	// wait_ret = philo_usleep(tinfo, tinfo->time_to_think_ms * 1000);
-	// if (wait_ret == GET_TIME_ERROR)
-		// return (GET_TIME_ERROR);
-	// if (wait_ret == FAILURE)
-		// return (FAILURE);
 	usleep(tinfo->time_to_die_ms * 1000);
 	return (SUCCESS);
 }
