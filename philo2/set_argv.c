@@ -11,6 +11,7 @@
 /* ************************************************************************** */
 
 #include "philo.h"
+#include <stddef.h>
 /**
  * receive "char **argv"
  * pack "char **argv" in "t_input_info input_info"
@@ -24,6 +25,52 @@ static int	ft_isnum(char c)
 static int	ft_isspace(char c)
 {
 	return (c == ' ' || (9 <= c && c <= 13));
+}
+
+#include <stdio.h>
+
+static int	ft_strcmp(char *str1, char *str2)
+{
+	unsigned char	*uc_str1;
+	unsigned char	*uc_str2;
+	int				i;
+
+	uc_str1 = (unsigned char *)str1;
+	uc_str2 = (unsigned char *)str2;
+	i = 0;
+	while (uc_str1[i] && uc_str2[i] && uc_str1[i] == uc_str2[i])
+		i++;
+	return (uc_str1[i] - uc_str2[i]);
+}
+
+static int	is_integer(char *ascii)
+{
+	size_t	len;
+
+	if (!ascii)
+		return (0);
+	len = 0;
+	while (ascii[len])
+		len++;
+	if (ascii[0] == '-')
+	{
+		if (len < 11)
+			return (1);
+		if (len > 11)
+			return (0);
+		if (len == 11 && ft_strcmp(ascii, INT_MIN_CHAR) > 0)
+			return (0);
+	}
+	else
+	{
+		if (len < 10)
+			return (1);
+		if (len > 10)
+			return (0);
+		if (len == 10 && ft_strcmp(ascii, INT_MAX_CHAR) > 0)
+			return (0);
+	}
+	return (1);
 }
 
 static int	validate_atoi(int *integer, char *ascii)
@@ -43,7 +90,7 @@ static int	validate_atoi(int *integer, char *ascii)
 			sign = -1;
 		i++;
 	}
-	if (!ft_isnum(ascii[i]))
+	if (!is_integer(ascii) || !ft_isnum(ascii[i]))
 		return (FAILURE);
 	while (ft_isnum(ascii[i]))
 	{

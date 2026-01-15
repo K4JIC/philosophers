@@ -1,14 +1,10 @@
 #include "philo.h"
 #include <unistd.h>
 
-int	philo_self_funeral(t_thread_info *tinfo, int remaining_life_us, char *reserved_msg)
+int	philo_self_funeral(t_thread_info *tinfo, int remaining_life_us)
 {
-	unsigned long long	i;
-
-	if (philo_write(tinfo, reserved_msg))
-		return (FAILURE);
-	usleep(remaining_life_us);
 	*tinfo->Im_died = 1;
+	usleep(remaining_life_us);
 	return (SUCCESS);
 }
 
@@ -26,7 +22,8 @@ int	philo_write(t_thread_info *tinfo, char *msg)
 
 int	philo_eat(t_thread_info *tinfo)
 {
-	int	wait_ret;
+	unsigned long long	now_time_us;
+	unsigned long long	remaining_life_us;
 
 	pthread_mutex_lock(tinfo->rfork_lock);
 	if (philo_write(tinfo, "has taken a fork") == GET_TIME_ERROR)
@@ -38,6 +35,14 @@ int	philo_eat(t_thread_info *tinfo)
 		return (GET_TIME_ERROR);
 	if (philo_write(tinfo, "is eating") == GET_TIME_ERROR)
 		return (GET_TIME_ERROR);
+	if (get_time_duration_us(&now_time_us, tinfo->start_time_us) == FAILURE)
+		return (GET_TIME_ERROR);
+	remaining_life_us = tinfo->time_to_sleep_ms * 1000 + now_time_us;
+	if (remaining_life_us < tinfo->time_to_die_ms * 1000)
+	{
+		philo_self_funeral(tinfo, remaining_life_us);
+		return (FAILURE);
+	}
 	usleep(tinfo->time_to_die_ms * 1000);
 	tinfo->eat_count++;
 	pthread_mutex_unlock(tinfo->rfork_lock);
@@ -47,20 +52,38 @@ int	philo_eat(t_thread_info *tinfo)
 
 int	philo_sleep(t_thread_info *tinfo)
 {
-	int	wait_ret;
+	unsigned long long	now_time_us;
+	unsigned long long	remaining_life_us;
 
 	if (philo_write(tinfo, "is sleeping") == GET_TIME_ERROR)
 		return (GET_TIME_ERROR);
+	if (get_time_duration_us(&now_time_us, tinfo->start_time_us) == FAILURE)
+		return (GET_TIME_ERROR);
+	remaining_life_us = tinfo->time_to_sleep_ms * 1000 + now_time_us;
+	if (remaining_life_us < tinfo->time_to_die_ms * 1000)
+	{
+		philo_self_funeral(tinfo, remaining_life_us);
+		return (FAILURE);
+	}
 	usleep(tinfo->time_to_sleep_ms * 1000);
 	return (SUCCESS);
 }
 
 int	philo_think(t_thread_info *tinfo)
 {
-	int	wait_ret;
+	unsigned long long	now_time_us;
+	unsigned long long	remaining_life_us;
 
-	if (philo_write(tinfo, "is thinking") == FAILURE)
+	if (philo_write(tinfo, "is thinking") == GET_TIME_ERROR)
+		return (GET_TIME_ERROR);
+	if (get_time_duration_us(&now_time_us, tinfo->start_time_us) == FAILURE)
+		return (GET_TIME_ERROR);
+	remaining_life_us = tinfo->time_to_sleep_ms * 1000 + now_time_us;
+	if (remaining_life_us < tinfo->time_to_die_ms * 1000)
+	{
+		philo_self_funeral(tinfo, remaining_life_us);
 		return (FAILURE);
+	}
 	usleep(tinfo->time_to_die_ms * 1000);
 	return (SUCCESS);
 }

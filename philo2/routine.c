@@ -51,6 +51,8 @@ void	*philo_routine(void *info)
 	return (NULL);
 }
 
+
+
 void	*observe_routine(void *master_void)
 {
 	t_master	*master;

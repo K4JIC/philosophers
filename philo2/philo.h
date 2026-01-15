@@ -23,6 +23,8 @@
 # define SUCCESS 0
 # define FAILURE 1
 # define SEC_TO_USEC 1000000
+# define INT_MAX_CHAR "2147483647"
+# define INT_MIN_CHAR "-2147483648"
 
 enum error_identifier
 {
