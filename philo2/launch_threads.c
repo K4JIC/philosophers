@@ -15,21 +15,21 @@
 
 static int	launch_one_thread(t_master *master, int philo_num)
 {
-	if (pthread_create(&(master->threads[philo_num]),
+	if (pthread_create(&(master->philo_threads[philo_num]),
 						NULL,
 						philo_routine,
-						&(master->threads_info[philo_num]))
+						&(master->philos_info[philo_num]))
 		== FAILURE)
 		return (FAILURE);
 	return (SUCCESS);
 }
 
-static int	launch_observe_thread(t_master *master)
+static int	launch_grim_reaper_thread(t_master *master)
 {
-	if (pthread_create(master->observe_thread,
+	if (pthread_create(master->grim_reaper_thread,
 						NULL,
-						observe_routine,
-						(void *)master)
+						grim_reaper_routine,
+						(void *)&(master->grim_info))
 		== FAILURE)
 		return (FAILURE);
 	return (SUCCESS);
@@ -39,10 +39,10 @@ int	launch_threads(t_master *master)
 {
 	int	i;
 
-	if (launch_observe_thread(master) == FAILURE)
+	if (launch_grim_reaper_thread(master) == FAILURE)
 		return (FAILURE);
 	i = 0;
-	while (i < master->iinfo.philo_max)
+	while (i < master->input_info.philo_max)
 	{
 		if (launch_one_thread(master, i) == FAILURE)
 			return (FAILURE);

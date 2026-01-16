@@ -19,9 +19,9 @@ void	wait_threads(t_master *master)
 	int	i;
 
 	i = 0;
-	while (i < master->iinfo.philo_max)
+	while (i < master->input_info.philo_max)
 	{
-		pthread_join(master->threads[i], NULL);
+		pthread_join(master->philo_threads[i], NULL);
 		i++;
 	}
 }
@@ -31,10 +31,10 @@ void	report_death(t_master *master)
 	int	philo_num;
 
 	philo_num = 0;
-	while (master->someone_died[philo_num] != 0 && philo_num < master->iinfo.philo_max)
+	while (master->dead_philo_name != -1 && philo_num < master->input_info.philo_max)
 		philo_num++;
-	if (philo_num != master->iinfo.philo_max)
-		printf("%04lld %d is died\n", master->term_time_us / 1000, philo_num);
+	if (philo_num != master->input_info.philo_max)
+		printf("%04lld %d is died\n", master->grim_info.term_time_us / 1000, philo_num);
 }
 
 int	main(int argc, char **argv)
@@ -46,18 +46,21 @@ int	main(int argc, char **argv)
 		return (input_error(&master));
 	if (argc == 6)
 		master.must_eat_option = 1;
-	if (set_argv(argc, argv, &master.iinfo) == FAILURE)
+	if (set_argv(argc, argv, &master.input_info) == FAILURE)
 		return (input_error(&master));
+	printf("a\n");
 	if (set_malloc(&master) == FAILURE)
 		return (malloc_error(&master));
-	set_mutexes(&master.mutexes, master.iinfo.philo_max);
+	printf("a\n");
+	set_mutexes(&master.mutexes, master.input_info.philo_max);
 	if (set_threads_info(&master) == FAILURE)
 		return (gettime_error(&master));
+	printf("a\n");
 	if (launch_threads(&master) == FAILURE)
 		return (threads_error(&master));
 	wait_threads(&master);
-	pthread_join(*master.observe_thread, NULL);
+	pthread_join(*master.grim_reaper_thread, NULL);
 	report_death(&master);
-	destroy_mutexes(&master.mutexes, master.iinfo.philo_max);
+	destroy_mutexes(&master.mutexes, master.input_info.philo_max);
 	free_master(&master);
 }

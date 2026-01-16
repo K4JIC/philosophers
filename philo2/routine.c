@@ -14,21 +14,21 @@
 
 void	*philo_routine(void *info)
 {
-	t_thread_info	*tinfo;
+	t_philo_thread_info	*philo_info;
 
-	tinfo = (t_thread_info *)info;
-	if (tinfo->philo_num % 2 == 0)
+	philo_info = (t_philo_thread_info *)info;
+	if (philo_info->philo_num % 2 == 0)
 	{
 		while (1)
 		{
-			if (philo_eat(tinfo) == FAILURE)
+			if (philo_eat(philo_info) == FAILURE)
 			{
-				philo_write(tinfo, "finish\n");
+				philo_write(philo_info, "finish\n");
 				return (NULL);
 			}
-			if (philo_sleep(tinfo) == FAILURE)
+			if (philo_sleep(philo_info) == FAILURE)
 				return (NULL);
-			if (philo_think(tinfo) == FAILURE)
+			if (philo_think(philo_info) == FAILURE)
 				return (NULL);
 		}
 	}
@@ -36,65 +36,65 @@ void	*philo_routine(void *info)
 	{
 		while (1)
 		{
-			if (philo_sleep(tinfo) == FAILURE)
+			if (philo_sleep(philo_info) == FAILURE)
 			{
-				philo_write(tinfo, "finish\n");
+				philo_write(philo_info, "finish\n");
 				return (NULL);
 			}
-			if (philo_think(tinfo) == FAILURE)
+			if (philo_think(philo_info) == FAILURE)
 				return (NULL);
-			if (philo_eat(tinfo) == FAILURE)
+			if (philo_eat(philo_info) == FAILURE)
 				return (NULL);
 		}
 	}
 	return (NULL);
 }
 
-void	*observe_routine(void *master_void)
-{
-	t_master	*master;
-	int			philo_max;
-	int			i;
+// void	*observe_routine(void *master_void)
+// {
+// 	t_master	*master;
+// 	int			philo_max;
+// 	int			i;
 
-	master = (t_master *)master_void;
-	philo_max = master->iinfo.philo_max;
-	i = 0;
-	while (1)
-	{
-		if (master->someone_died[i] != 0)
-		{
-			if (get_time_duration_us(&master->term_time_us,
-									master->threads_info->start_time_us)
-				== GET_TIME_ERROR)
-				return (NULL);
-			return (NULL);
-		}
-		i = (i + 1) % philo_max;
-		usleep(1);
-	}
-	return (NULL);
-}
+// 	master = (t_master *)master_void;
+// 	philo_max = master->input_info.philo_max;
+// 	i = 0;
+// 	while (1)
+// 	{
+// 		if (master->last_eat_us[i] != 0)
+// 		{
+// 			if (get_time_duration_us(&master->term_time_us,
+// 									master->philos_info->start_time_us)
+// 				== GET_TIME_ERROR)
+// 				return (NULL);
+// 			return (NULL);
+// 		}
+// 		i = (i + 1) % philo_max;
+// 		usleep(1);
+// 	}
+// 	return (NULL);
+// }
 
-void	*grim_reaper_routine(void *gr_info_void)
+void	*grim_reaper_routine(void *grim_info_void)
 {
-	t_grim_reaper_thread_info	*gr_info;
+	t_grim_reaper_thread_info	*grim_info;
 	int							i;
 	t_time_us					now_us;
 	t_time_us					hungry_time_us;
 
-	gr_info = (t_grim_reaper_thread_info *)gr_info_void;
+	grim_info = (t_grim_reaper_thread_info *)grim_info_void;
 	i = 0;
 	while (1)
 	{
-		if (get_time_duration_us(&now_us, gr_info->start_time_us) == FAILURE)
+		if (get_time_duration_us(&now_us, grim_info->start_time_us) == FAILURE)
 			return (NULL);
-		hungry_time_us = now_us - gr_info->last_eat_us[i];
-		if (hungry_time_us > gr_info->time_to_die_us)
+		hungry_time_us = now_us - grim_info->last_eat_us[i];
+		if (hungry_time_us > grim_info->time_to_die_us)
 		{
-			gr_info->term_time_us = now_us;
+			grim_info->term_time_us = now_us;
 			break;
 		}
-		i = (i + 1) % gr_info->philo_max;
+		i = (i + 1) % grim_info->philo_max;
 	}
 	return (NULL);
 }

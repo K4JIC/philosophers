@@ -27,40 +27,40 @@ void	*ft_calloc(size_t memsize)
 
 int	set_malloc(t_master *master)
 {
-	if (!master->iinfo.philo_max)
+	if (!master->input_info.philo_max)
 		return (FAILURE);
-	master->threads = ft_calloc(sizeof(pthread_t) *
-						master->iinfo.philo_max);
-	if (!master->threads)
+	master->philo_threads = ft_calloc(sizeof(pthread_t) *
+						master->input_info.philo_max);
+	if (!master->philo_threads)
 		return (FAILURE);
-	master->observe_thread = ft_calloc(sizeof(pthread_t));
-	if (!master->observe_thread)
+	master->grim_reaper_thread = ft_calloc(sizeof(pthread_t));
+	if (!master->grim_reaper_thread)
 		return (free_master(master), FAILURE);
-	master->threads_info = ft_calloc(sizeof(t_thread_info) *
-						master->iinfo.philo_max);
-	if (!master->threads_info)
+	master->philos_info = ft_calloc(sizeof(t_philo_thread_info) *
+						master->input_info.philo_max);
+	if (!master->philos_info)
 		return (free_master(master), FAILURE);
 	master->mutexes.forks_lock = ft_calloc(sizeof(pthread_mutex_t) *
-						master->iinfo.philo_max);
+						master->input_info.philo_max);
 	if (!master->mutexes.forks_lock)
 		return (free_master(master), FAILURE);
-	master->someone_died = ft_calloc(sizeof(int) *
-						master->iinfo.philo_max);
-	if (!master->someone_died)
+	master->last_eat_us = ft_calloc(sizeof(t_time_us) *
+						master->input_info.philo_max);
+	if (!master->last_eat_us)
 		return (free_master(master), FAILURE);
 	return (SUCCESS);
 }
 
 void	free_master(t_master *master)
 {
-	if (master->threads)
-		free(master->threads);
-	if (master->observe_thread)
-		free(master->observe_thread);
-	if (master->threads_info)
-		free(master->threads_info);
+	if (master->philo_threads)
+		free(master->philo_threads);
+	if (master->grim_reaper_thread)
+		free(master->grim_reaper_thread);
+	if (master->philos_info)
+		free(master->philos_info);
 	if (master->mutexes.forks_lock)
 		free(master->mutexes.forks_lock);
-	if (master->someone_died)
-		free(master->someone_died);
+	if (master->last_eat_us)
+		free(master->last_eat_us);
 }

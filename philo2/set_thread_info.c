@@ -1,7 +1,7 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   set_thread_info.c                                  :+:      :+:    :+:   */
+/*   set_philo_thread_info.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: tozaki <tozaki@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
@@ -12,58 +12,56 @@
 
 #include "philo.h"
 
-static unsigned long long	ft_min(unsigned long long a, unsigned long long b, unsigned long long c)
+static void	set_one_thread_info(t_master *master, int philo_num, t_time_us start_time_us)
 {
-	unsigned long long	min;
+	t_philo_thread_info	*philo_info;
 
-	min = a;
-	if (min > b)
-		min = b;
-	if (min > c)
-		min = c;
-	return (min);
+	philo_info = &master->philos_info[philo_num];
+	memset(philo_info, 0, sizeof(t_philo_thread_info));
+	philo_info->start_time_us = start_time_us;
+	philo_info->last_eat_us = &master->last_eat_us[philo_num];
+	*philo_info->last_eat_us = start_time_us;
+	philo_info->philo_num = philo_num;
+	philo_info->philo_max = master->input_info.philo_max;
+	philo_info->time_to_die_us = master->input_info.time_to_die_us;
+	philo_info->time_to_eat_us = master->input_info.time_to_eat_us;
+	philo_info->time_to_sleep_us = master->input_info.time_to_sleep_us;
+	philo_info->time_to_think_us = philo_info->time_to_die_us - philo_info->time_to_eat_us
+						- philo_info->time_to_sleep_us - 1;
+	if (philo_info->time_to_think_us < 0)
+		philo_info->time_to_think_us = 0;
+	philo_info->rfork_lock =
+		&master->mutexes.forks_lock[philo_num % master->input_info.philo_max];
+	philo_info->lfork_lock =
+		&master->mutexes.forks_lock[(philo_num + 1) % master->input_info.philo_max];
+	philo_info->write_lock = &master->mutexes.write_lock;
+	philo_info->flag_lock = &master->mutexes.flag_lock;
+	philo_info->must_eat_option = master->must_eat_option;
 }
 
-static void	set_one_thread_info(t_master *master,
-		int philo_num, unsigned long long start_time_us)
+void	set_grim_reaper_info(t_master *master, t_time_us start_time_us)
 {
-	t_thread_info	*tinfo;
+	t_grim_reaper_thread_info	*grim_info;
 
-	tinfo = &master->threads_info[philo_num];
-	memset(tinfo, 0, sizeof(t_thread_info));
-	tinfo->start_time_us = start_time_us;
-	tinfo->last_eat_us = start_time_us;
-	tinfo->unit_time_us = ft_min(master->iinfo.time_to_die_us, master->iinfo.time_to_eat_us, master->iinfo.time_to_sleep_us);
-	tinfo->philo_num = philo_num;
-	tinfo->philo_max = master->iinfo.philo_max;
-	tinfo->time_to_die_us = master->iinfo.time_to_die_us;
-	tinfo->time_to_eat_us = master->iinfo.time_to_eat_us;
-	tinfo->time_to_sleep_us = master->iinfo.time_to_sleep_us;
-	tinfo->time_to_think_us = tinfo->time_to_die_us - tinfo->time_to_eat_us
-						- tinfo->time_to_sleep_us - 1;
-	if (tinfo->time_to_think_us < 0)
-		tinfo->time_to_think_us = 0;
-	tinfo->rfork_lock =
-		&master->mutexes.forks_lock[philo_num % master->iinfo.philo_max];
-	tinfo->lfork_lock =
-		&master->mutexes.forks_lock[(philo_num + 1) % master->iinfo.philo_max];
-	tinfo->write_lock = &master->mutexes.write_lock;
-	tinfo->flag_lock = &master->mutexes.flag_lock;
-	tinfo->Im_died = &master->someone_died[philo_num];
-	tinfo->must_eat = master->philo_must_eat;
-	tinfo->finish_flag = &master->finish_flag;
-	tinfo->must_eat_option = master->must_eat_option;
+	grim_info = &master->grim_info;
+	grim_info->philo_max = master->input_info.philo_max;
+	grim_info->start_time_us = start_time_us;
+	grim_info->time_to_die_us = master->input_info.time_to_die_us;
+	grim_info->term_time_us = 0;
+	grim_info->last_eat_us = master->last_eat_us;
+	grim_info->dead_philo_name = master->dead_philo_name;
 }
 
 int	set_threads_info(t_master *master)
 {
-	unsigned long long	start_time_us;
-	int					i;
+	t_time_us	start_time_us;
+	int			i;
 
 	if (get_time_us(&start_time_us) == FAILURE)
 		return (FAILURE);
+	set_grim_reaper_info(master, start_time_us);
 	i = 0;
-	while (i < master->iinfo.philo_max)
+	while (i < master->input_info.philo_max)
 	{
 		set_one_thread_info(master, i, start_time_us);
 		i++;

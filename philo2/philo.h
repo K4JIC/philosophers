@@ -54,7 +54,7 @@ typedef struct s_mutexes
 typedef struct s_thread_info
 {
 	t_time_us			start_time_us;
-	t_time_us			last_eat_us;
+	t_time_us			*last_eat_us;
 	t_time_us			unit_time_us;
 	int					philo_num;
 	int					philo_max;
@@ -71,7 +71,8 @@ typedef struct s_thread_info
 	int					must_eat_option;
 	int					must_eat;
 	int					eat_count;
-}						t_thread_info;
+	int					dead_philo_name;
+}						t_philo_thread_info;
 
 typedef struct s_grim_reaper_thread_info
 {
@@ -85,20 +86,22 @@ typedef struct s_grim_reaper_thread_info
 
 typedef struct s_master
 {
-	t_input_info		iinfo;
-	t_mutexes			mutexes;
-	pthread_t			*threads;
-	pthread_t			*observe_thread;
-	t_time_us			term_time_us;
-	t_thread_info		*threads_info;
-	int					philo_must_eat;
-	int					*someone_died;
-	int					finish_flag;
-	int					must_eat_option;
+	// threads info
+	t_input_info			input_info;
+	t_philo_thread_info		*philos_info;
+	t_grim_reaper_thread_info	grim_info;
+	// threads pointer
+	pthread_t				*philo_threads;
+	pthread_t				*grim_reaper_thread;
+	// materials shared between different kinds of threads
+	int						must_eat_option;
+	t_mutexes				mutexes;
+	t_time_us				*last_eat_us;
+	int						dead_philo_name;
 }					t_master;
 
 /*set_argv.c*/
-int		set_argv(int argc, char **argv, t_input_info *iinfo);
+int		set_argv(int argc, char **argv, t_input_info *input_info);
 
 /*set_malloc.c*/
 int		set_malloc(t_master *master);
@@ -108,21 +111,22 @@ void	free_master(t_master *master);
 void	set_mutexes(t_mutexes *mutex, int philo_max);
 void	destroy_mutexes(t_mutexes *mutex, int philo_max);
 
-/*set_thread_info.c*/
+/*set_philo_thread_info.c*/
 int		set_threads_info(t_master *master);
 
 /*routine_finish.c*/
-int	is_finished(t_thread_info *tinfo);
+int	is_finished(t_philo_thread_info *philo_info);
 
 /*routine_action.c*/
-int	philo_eat(t_thread_info *tinfo);
-int	philo_sleep(t_thread_info *tinfo);
-int	philo_think(t_thread_info *tinfo);
+int	philo_eat(t_philo_thread_info *philo_info);
+int	philo_sleep(t_philo_thread_info *philo_info);
+int	philo_think(t_philo_thread_info *philo_info);
 
 /*routine.c*/
 void	*philo_routine(void *info);
 void	*observe_routine(void *master_void);
-int	philo_write(t_thread_info *tinfo, char *msg);// 後で消す
+void	*grim_reaper_routine(void *gr_info_void);
+int	philo_write(t_philo_thread_info *philo_info, char *msg);// 後で消す
 
 /*launch_threads.c*/
 int		launch_threads(t_master *master);
