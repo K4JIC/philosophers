@@ -11,7 +11,6 @@
 /* ************************************************************************** */
 
 #include "philo.h"
-#include <unistd.h>
 
 static int	ft_puterrmsg(char *errmsg)
 {

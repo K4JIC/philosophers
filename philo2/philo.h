@@ -23,6 +23,7 @@
 # define SUCCESS 0
 # define FAILURE 1
 # define SEC_TO_USEC 1000000
+# define UNIT_TIME_US 500
 # define INT_MAX_CHAR "2147483647"
 # define INT_MIN_CHAR "-2147483648"
 
@@ -66,12 +67,10 @@ typedef struct s_thread_info
 	pthread_mutex_t		*lfork_lock;
 	pthread_mutex_t		*write_lock;
 	pthread_mutex_t		*flag_lock;
-	int					*finish_flag;
-	int					*Im_died;
 	int					must_eat_option;
 	int					must_eat;
 	int					eat_count;
-	int					dead_philo_name;
+	int					*dead_philo_name;
 }						t_philo_thread_info;
 
 typedef struct s_grim_reaper_thread_info
@@ -81,7 +80,7 @@ typedef struct s_grim_reaper_thread_info
 	t_time_us	time_to_die_us;
 	t_time_us	term_time_us;
 	t_time_us	*last_eat_us;
-	int			dead_philo_name;
+	int			*dead_philo_name;
 }				t_grim_reaper_thread_info;
 
 typedef struct s_master
@@ -97,7 +96,7 @@ typedef struct s_master
 	int						must_eat_option;
 	t_mutexes				mutexes;
 	t_time_us				*last_eat_us;
-	int						dead_philo_name;
+	int						*dead_philo_name;
 }					t_master;
 
 /*set_argv.c*/

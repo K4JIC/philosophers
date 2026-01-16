@@ -11,7 +11,6 @@
 /* ************************************************************************** */
 
 #include <stdlib.h>
-#include <string.h>
 #include "philo.h"
 
 void	*ft_calloc(size_t memsize)

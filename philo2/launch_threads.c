@@ -41,6 +41,7 @@ int	launch_threads(t_master *master)
 
 	if (launch_grim_reaper_thread(master) == FAILURE)
 		return (FAILURE);
+	printf("b\n");
 	i = 0;
 	while (i < master->input_info.philo_max)
 	{

@@ -91,6 +91,7 @@ void	*grim_reaper_routine(void *grim_info_void)
 		hungry_time_us = now_us - grim_info->last_eat_us[i];
 		if (hungry_time_us > grim_info->time_to_die_us)
 		{
+			*grim_info->dead_philo_name = i;
 			grim_info->term_time_us = now_us;
 			break;
 		}

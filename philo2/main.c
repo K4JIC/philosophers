@@ -31,7 +31,7 @@ void	report_death(t_master *master)
 	int	philo_num;
 
 	philo_num = 0;
-	while (master->dead_philo_name != -1 && philo_num < master->input_info.philo_max)
+	while (*master->dead_philo_name != -1 && philo_num < master->input_info.philo_max)
 		philo_num++;
 	if (philo_num != master->input_info.philo_max)
 		printf("%04lld %d is died\n", master->grim_info.term_time_us / 1000, philo_num);
@@ -40,8 +40,11 @@ void	report_death(t_master *master)
 int	main(int argc, char **argv)
 {
 	t_master	master;
+	int			dead_philo_name;
 
 	memset(&master, 0, sizeof(t_master));
+	dead_philo_name = -1;
+	master.dead_philo_name = &dead_philo_name;
 	if (argc != 5 && argc != 6)
 		return (input_error(&master));
 	if (argc == 6)

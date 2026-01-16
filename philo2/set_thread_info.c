@@ -37,6 +37,7 @@ static void	set_one_thread_info(t_master *master, int philo_num, t_time_us start
 	philo_info->write_lock = &master->mutexes.write_lock;
 	philo_info->flag_lock = &master->mutexes.flag_lock;
 	philo_info->must_eat_option = master->must_eat_option;
+	philo_info->dead_philo_name = master->dead_philo_name;
 }
 
 void	set_grim_reaper_info(t_master *master, t_time_us start_time_us)
