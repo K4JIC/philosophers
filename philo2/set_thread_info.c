@@ -33,16 +33,16 @@ static void	set_one_thread_info(t_master *master,
 	memset(tinfo, 0, sizeof(t_thread_info));
 	tinfo->start_time_us = start_time_us;
 	tinfo->last_eat_us = start_time_us;
-	tinfo->unit_time_us = ft_min(master->iinfo.time_to_die_ms, master->iinfo.time_to_eat_ms, master->iinfo.time_to_sleep_ms);
+	tinfo->unit_time_us = ft_min(master->iinfo.time_to_die_us, master->iinfo.time_to_eat_us, master->iinfo.time_to_sleep_us);
 	tinfo->philo_num = philo_num;
 	tinfo->philo_max = master->iinfo.philo_max;
-	tinfo->time_to_die_ms = master->iinfo.time_to_die_ms;
-	tinfo->time_to_eat_ms = master->iinfo.time_to_eat_ms;
-	tinfo->time_to_sleep_ms = master->iinfo.time_to_sleep_ms;
-	tinfo->time_to_think_ms = tinfo->time_to_die_ms - tinfo->time_to_eat_ms
-						- tinfo->time_to_sleep_ms - 1;
-	if (tinfo->time_to_think_ms < 0)
-		tinfo->time_to_think_ms = 0;
+	tinfo->time_to_die_us = master->iinfo.time_to_die_us;
+	tinfo->time_to_eat_us = master->iinfo.time_to_eat_us;
+	tinfo->time_to_sleep_us = master->iinfo.time_to_sleep_us;
+	tinfo->time_to_think_us = tinfo->time_to_die_us - tinfo->time_to_eat_us
+						- tinfo->time_to_sleep_us - 1;
+	if (tinfo->time_to_think_us < 0)
+		tinfo->time_to_think_us = 0;
 	tinfo->rfork_lock =
 		&master->mutexes.forks_lock[philo_num % master->iinfo.philo_max];
 	tinfo->lfork_lock =

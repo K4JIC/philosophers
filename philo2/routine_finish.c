@@ -19,7 +19,7 @@ static int	is_alive(t_thread_info *tinfo)
 
 	if (get_time_duration_us(&hungry_time_us, tinfo->last_eat_us))
 		return (GET_TIME_ERROR);
-	if (hungry_time_us / 1000 > (unsigned long long)tinfo->time_to_die_ms)
+	if (hungry_time_us / 1000 > (unsigned long long)tinfo->time_to_die_us)
 	{
 		// printf("%d ", tinfo->philo_num);
 		// printf("hungry = %lld\n", hungry_time_us);

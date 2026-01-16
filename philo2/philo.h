@@ -37,11 +37,11 @@ enum error_identifier
 
 typedef struct s_input_info
 {
-	int	philo_max;
-	int	time_to_die_ms;
-	int	time_to_eat_ms;
-	int	time_to_sleep_ms;
-	int	philo_must_eat;
+	int			philo_max;
+	t_time_us	time_to_die_us;
+	t_time_us	time_to_eat_us;
+	t_time_us	time_to_sleep_us;
+	int			philo_must_eat;
 }		t_input_info;
 
 typedef struct s_mutexes
@@ -58,10 +58,10 @@ typedef struct s_thread_info
 	t_time_us			unit_time_us;
 	int					philo_num;
 	int					philo_max;
-	int					time_to_die_ms;
-	int					time_to_eat_ms;
-	int					time_to_sleep_ms;
-	int					time_to_think_ms;
+	t_time_us			time_to_die_us;
+	t_time_us			time_to_eat_us;
+	t_time_us			time_to_sleep_us;
+	t_time_us			time_to_think_us;
 	pthread_mutex_t		*rfork_lock;
 	pthread_mutex_t		*lfork_lock;
 	pthread_mutex_t		*write_lock;

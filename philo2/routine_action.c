@@ -37,13 +37,13 @@ int	philo_eat(t_thread_info *tinfo)
 		return (GET_TIME_ERROR);
 	if (get_time_duration_us(&now_time_us, tinfo->start_time_us) == FAILURE)
 		return (GET_TIME_ERROR);
-	remaining_life_us = tinfo->time_to_sleep_ms * 1000 + now_time_us;
-	if (remaining_life_us < tinfo->time_to_die_ms * 1000)
+	remaining_life_us = tinfo->time_to_sleep_us + now_time_us;
+	if (remaining_life_us < tinfo->time_to_die_us)
 	{
 		philo_self_funeral(tinfo, remaining_life_us);
 		return (FAILURE);
 	}
-	usleep(tinfo->time_to_die_ms * 1000);
+	usleep(tinfo->time_to_die_us);
 	tinfo->eat_count++;
 	pthread_mutex_unlock(tinfo->rfork_lock);
 	pthread_mutex_unlock(tinfo->lfork_lock);
@@ -59,13 +59,13 @@ int	philo_sleep(t_thread_info *tinfo)
 		return (GET_TIME_ERROR);
 	if (get_time_duration_us(&now_time_us, tinfo->start_time_us) == FAILURE)
 		return (GET_TIME_ERROR);
-	remaining_life_us = tinfo->time_to_sleep_ms * 1000 + now_time_us;
-	if (remaining_life_us < tinfo->time_to_die_ms * 1000)
+	remaining_life_us = tinfo->time_to_sleep_us + now_time_us;
+	if (remaining_life_us < tinfo->time_to_die_us)
 	{
 		philo_self_funeral(tinfo, remaining_life_us);
 		return (FAILURE);
 	}
-	usleep(tinfo->time_to_sleep_ms * 1000);
+	usleep(tinfo->time_to_sleep_us);
 	return (SUCCESS);
 }
 
@@ -78,12 +78,12 @@ int	philo_think(t_thread_info *tinfo)
 		return (GET_TIME_ERROR);
 	if (get_time_duration_us(&now_time_us, tinfo->start_time_us) == FAILURE)
 		return (GET_TIME_ERROR);
-	remaining_life_us = tinfo->time_to_sleep_ms * 1000 + now_time_us;
-	if (remaining_life_us < tinfo->time_to_die_ms * 1000)
+	remaining_life_us = tinfo->time_to_sleep_us + now_time_us;
+	if (remaining_life_us < tinfo->time_to_die_us)
 	{
 		philo_self_funeral(tinfo, remaining_life_us);
 		return (FAILURE);
 	}
-	usleep(tinfo->time_to_die_ms * 1000);
+	usleep(tinfo->time_to_die_us);
 	return (SUCCESS);
 }
