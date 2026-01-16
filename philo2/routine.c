@@ -86,7 +86,7 @@ void	*grim_reaper_routine(void *grim_info_void)
 	i = 0;
 	while (1)
 	{
-		if (get_time_duration_us(&now_us, grim_info->start_time_us) == FAILURE)
+		if (get_time_us(&now_us) == FAILURE)
 			return (NULL);
 		hungry_time_us = now_us - grim_info->last_eat_us[i];
 		if (hungry_time_us > grim_info->time_to_die_us)
