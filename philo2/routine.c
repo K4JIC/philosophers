@@ -12,7 +12,6 @@
 
 #include "philo.h"
 
-
 void	*philo_routine(void *info)
 {
 	t_thread_info	*tinfo;
@@ -24,7 +23,7 @@ void	*philo_routine(void *info)
 		{
 			if (philo_eat(tinfo) == FAILURE)
 			{
-				// philo_write(tinfo, "finish\n");
+				philo_write(tinfo, "finish\n");
 				return (NULL);
 			}
 			if (philo_sleep(tinfo) == FAILURE)
@@ -39,7 +38,7 @@ void	*philo_routine(void *info)
 		{
 			if (philo_sleep(tinfo) == FAILURE)
 			{
-				// philo_write(tinfo, "finish\n");
+				philo_write(tinfo, "finish\n");
 				return (NULL);
 			}
 			if (philo_think(tinfo) == FAILURE)
@@ -50,8 +49,6 @@ void	*philo_routine(void *info)
 	}
 	return (NULL);
 }
-
-
 
 void	*observe_routine(void *master_void)
 {
@@ -74,6 +71,30 @@ void	*observe_routine(void *master_void)
 		}
 		i = (i + 1) % philo_max;
 		usleep(1);
+	}
+	return (NULL);
+}
+
+void	*grim_reaper_routine(void *gr_info_void)
+{
+	t_grim_reaper_thread_info	*gr_info;
+	int							i;
+	t_time_us					now_us;
+	t_time_us					hungry_time_us;
+
+	gr_info = (t_grim_reaper_thread_info *)gr_info_void;
+	i = 0;
+	while (1)
+	{
+		if (get_time_duration_us(&now_us, gr_info->start_time_us) == FAILURE)
+			return (NULL);
+		hungry_time_us = now_us - gr_info->last_eat_us[i];
+		if (hungry_time_us > gr_info->time_to_die_us)
+		{
+			gr_info->term_time_us = now_us;
+			break;
+		}
+		i = (i + 1) % gr_info->philo_max;
 	}
 	return (NULL);
 }

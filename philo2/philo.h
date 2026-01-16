@@ -26,6 +26,8 @@
 # define INT_MAX_CHAR "2147483647"
 # define INT_MIN_CHAR "-2147483648"
 
+typedef unsigned long long t_time_us;
+
 enum error_identifier
 {
 	GET_TIME_ERROR=-1,
@@ -51,9 +53,9 @@ typedef struct s_mutexes
 
 typedef struct s_thread_info
 {
-	unsigned long long	start_time_us;
-	unsigned long long	last_eat_us;
-	unsigned long long	unit_time_us;
+	t_time_us			start_time_us;
+	t_time_us			last_eat_us;
+	t_time_us			unit_time_us;
 	int					philo_num;
 	int					philo_max;
 	int					time_to_die_ms;
@@ -71,13 +73,23 @@ typedef struct s_thread_info
 	int					eat_count;
 }						t_thread_info;
 
+typedef struct s_grim_reaper_thread_info
+{
+	int			philo_max;
+	t_time_us	start_time_us;
+	t_time_us	time_to_die_us;
+	t_time_us	term_time_us;
+	t_time_us	*last_eat_us;
+	int			dead_philo_name;
+}				t_grim_reaper_thread_info;
+
 typedef struct s_master
 {
 	t_input_info		iinfo;
 	t_mutexes			mutexes;
 	pthread_t			*threads;
 	pthread_t			*observe_thread;
-	unsigned long long	term_time_us;
+	t_time_us			term_time_us;
 	t_thread_info		*threads_info;
 	int					philo_must_eat;
 	int					*someone_died;
@@ -122,8 +134,8 @@ int	gettime_error(t_master *master);
 int	threads_error(t_master *master);
 
 /*time_utils.c */
-int	get_time_us(unsigned long long *time_us);
-int	get_time_duration_us(unsigned long long *time_us,
-						unsigned long long start_time_us);
+int	get_time_us(t_time_us *time_us);
+int	get_time_duration_us(t_time_us *time_us,
+						t_time_us start_time_us);
 
 #endif
