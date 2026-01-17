@@ -13,15 +13,15 @@
 #include "philo.h"
 #include <unistd.h>
 
-static unsigned long long	convert_tv_to_ull(struct timeval tv)
+static t_time_us	convert_tv_to_ull(struct timeval tv)
 {
-	unsigned long long	time_us;
+	t_time_us	time_us;
 
 	time_us = tv.tv_sec * SEC_TO_USEC + tv.tv_usec;
 	return (time_us);
 }
 
-int	get_time_us(unsigned long long *time_us)
+int	get_time_us(t_time_us *time_us)
 {
 	struct timeval		tv;
 
@@ -31,10 +31,10 @@ int	get_time_us(unsigned long long *time_us)
 	return (SUCCESS);
 }
 
-int	get_time_duration_us(unsigned long long *time_us,
-						unsigned long long start_clock_us)
+int	get_time_duration_us(t_time_us *time_us,
+						t_time_us start_clock_us)
 {
-	unsigned long long	now_time_us;
+	t_time_us	now_time_us;
 
 	if (get_time_us(&now_time_us) == GET_TIME_ERROR)
 		return (GET_TIME_ERROR);

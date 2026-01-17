@@ -40,7 +40,6 @@ int	philo_write(t_philo_thread_info *philo_info, char *msg)
 int	philo_eat(t_philo_thread_info *philo_info)
 {
 	t_time_us	now_time_us;
-	t_time_us	remaining_life_us;
 
 	philo_write(philo_info, "is thinking");
 	pthread_mutex_lock(philo_info->rfork_lock);
@@ -70,7 +69,6 @@ int	philo_eat(t_philo_thread_info *philo_info)
 int	philo_sleep(t_philo_thread_info *philo_info)
 {
 	t_time_us	now_time_us;
-	t_time_us	remaining_life_us;
 
 	if (philo_write(philo_info, "is sleeping") == GET_TIME_ERROR)
 		return (GET_TIME_ERROR);
@@ -84,7 +82,6 @@ int	philo_sleep(t_philo_thread_info *philo_info)
 int	philo_think(t_philo_thread_info *philo_info)
 {
 	t_time_us	now_time_us;
-	t_time_us	remaining_life_us;
 
 	if (philo_write(philo_info, "is thinking") == GET_TIME_ERROR)
 		return (GET_TIME_ERROR);
