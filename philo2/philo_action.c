@@ -17,7 +17,7 @@ int	philo_busy_wait_usleep(t_philo_thread_info *philo_info, useconds_t wait_time
 			return (GET_TIME_ERROR);
 		if (now_us - start_clock_us > wait_time_us)
 			break ;
-		if (is_finished(philo_info))
+		if (is_finished(philo_info) == FAILURE)
 			return (FAILURE);
 		usleep(UNIT_TIME_US);
 		i++;
@@ -42,6 +42,7 @@ int	philo_eat(t_philo_thread_info *philo_info)
 	t_time_us	now_time_us;
 	t_time_us	remaining_life_us;
 
+	philo_write(philo_info, "is thinking");
 	pthread_mutex_lock(philo_info->rfork_lock);
 	if (philo_write(philo_info, "has taken a fork") == GET_TIME_ERROR)
 		return (GET_TIME_ERROR);

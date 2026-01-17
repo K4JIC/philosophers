@@ -26,8 +26,6 @@ static int	ft_isspace(char c)
 	return (c == ' ' || (9 <= c && c <= 13));
 }
 
-#include <stdio.h>
-
 static int	ft_strcmp(char *str1, char *str2)
 {
 	unsigned char	*uc_str1;

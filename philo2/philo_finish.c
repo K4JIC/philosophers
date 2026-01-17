@@ -1,5 +1,4 @@
 #include "philo.h"
-#include <stdio.h>
 
 static int	process_is_finished(t_philo_thread_info *philo_info)
 {
@@ -28,6 +27,8 @@ static int	is_full(t_philo_thread_info *philo_info)
 int	is_finished(t_philo_thread_info *philo_info)
 {
 	if (process_is_finished(philo_info))
+		return (FAILURE);
+	if (is_full(philo_info))
 		return (FAILURE);
 	return (SUCCESS);
 }

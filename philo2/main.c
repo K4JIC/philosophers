@@ -47,14 +47,11 @@ int	main(int argc, char **argv)
 		master.must_eat_option = 1;
 	if (set_argv(argc, argv, &master.input_info) == FAILURE)
 		return (input_error(&master));
-	printf("a\n");
 	if (set_malloc(&master) == FAILURE)
 		return (malloc_error(&master));
-	printf("a\n");
 	set_mutexes(&master.mutexes, master.input_info.philo_max);
 	if (set_threads_info(&master) == FAILURE)
 		return (gettime_error(&master));
-	printf("a\n");
 	if (launch_threads(&master) == FAILURE)
 		return (threads_error(&master));
 	wait_threads(&master);

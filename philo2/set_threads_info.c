@@ -21,15 +21,11 @@ static void	set_one_thread_info(t_master *master, int philo_num, t_time_us start
 	philo_info->start_clock_us = start_clock_us;
 	philo_info->last_eat_clock_us = &master->last_eat_clock_us[philo_num];
 	*philo_info->last_eat_clock_us = start_clock_us;
-	philo_info->philo_num = philo_num;
+	philo_info->philo_num = philo_num + 1;
 	philo_info->philo_max = master->input_info.philo_max;
 	philo_info->time_to_die_us = master->input_info.time_to_die_us;
 	philo_info->time_to_eat_us = master->input_info.time_to_eat_us;
 	philo_info->time_to_sleep_us = master->input_info.time_to_sleep_us;
-	philo_info->time_to_think_us = philo_info->time_to_die_us - philo_info->time_to_eat_us
-						- philo_info->time_to_sleep_us - 1;
-	if (philo_info->time_to_think_us < 0)
-		philo_info->time_to_think_us = 0;
 	philo_info->rfork_lock =
 		&master->mutexes.forks_lock[philo_num % master->input_info.philo_max];
 	philo_info->lfork_lock =
@@ -37,6 +33,7 @@ static void	set_one_thread_info(t_master *master, int philo_num, t_time_us start
 	philo_info->write_lock = &master->mutexes.write_lock;
 	philo_info->flag_lock = &master->mutexes.flag_lock;
 	philo_info->must_eat_option = master->must_eat_option;
+	philo_info->must_eat = master->input_info.philo_must_eat;
 	philo_info->dead_philo_name = master->dead_philo_name;
 }
 
