@@ -1,0 +1,35 @@
+NAME	=	philo
+CC		=	cc
+CFLAGS	=	-Wall -Werror -Wextra
+SRCS	=	launch_threads.c\
+			main.c\
+			philo_action.c\
+			philo_finish.c\
+			raise_error.c\
+			routines.c\
+			set_argv.c\
+			set_malloc.c\
+			set_mutex.c\
+			set_threads_info.c\
+			time_utils.c
+OBJS	=	$(SRCS:%.c=%.o)
+# vpath %c ./philo
+
+.PHONY: all
+all: $(NAME)
+
+$(NAME): $(OBJS)
+	$(CC) $(OBJS) -o $(NAME)
+
+%.o: %.c
+	$(CC) $(CFLAGS) -c $< -o $@
+
+.PHONY: clean
+clean:
+	rm $(OBJS)
+
+.PHONY: fclean
+fclean: clean
+	rm $(TARGET)
+
+re: fclean all
