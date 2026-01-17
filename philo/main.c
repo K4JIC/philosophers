@@ -5,46 +5,58 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: tozaki <tozaki@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/12/20 20:35:50 by tozaki            #+#    #+#             */
-/*   Updated: 2025/12/28 17:35:30 by tozaki           ###   ########.fr       */
+/*   Created: 2025/12/28 18:09:42 by tozaki            #+#    #+#             */
+/*   Updated: 2026/01/13 17:07:51 by tozaki           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
+#include <string.h>
+#include <stdio.h>
 
-int	init_philostatus(char *);
-
-int	argument_error(void)
+void	wait_threads(t_master *master)
 {
-	write(1, "Error : Wrong arguments.\n", 25);
-	return (1);
+	int	i;
+
+	i = 0;
+	while (i < master->input_info.philo_max)
+	{
+		pthread_join(master->philo_threads[i], NULL);
+		i++;
+	}
 }
 
-int	malloc_error(void)
+void	report_death(t_master *master)
 {
-	write(1, "Error : Malloc failed.\n", 23);
-	return (1);
+	if (*master->dead_philo_name != -1)
+		printf("%04lld %d died\n", master->grim_info.term_time_us / 1000,
+				*master->dead_philo_name);
 }
-
-int	launch_error(void)
-{
-	write(1, "Error : An error occured while launch threads.\n", 47);
-	return (1);
-}
-
-void	free_all(t_mutexes s_mutexes, )
 
 int	main(int argc, char **argv)
 {
-	t_philo	philo;
+	t_master	master;
+	int			dead_philo_name;
 
+	memset(&master, 0, sizeof(t_master));
+	dead_philo_name = -1;
+	master.dead_philo_name = &dead_philo_name;
 	if (argc != 5 && argc != 6)
-		return (argument_error());
-	if (convert_input(argc, argv, &philo->iinfo) == FAIL)
-		return (argument_error());
-	philo->mutexes.forks = fork_init(philo->iinfo);
-	if (!philo->mutexes.forks)
-		return (malloc_error());
-	if (launch_threads(iinfo, mutexes) == FAIL)
-		return (launch_error());
+		return (input_error(&master));
+	if (argc == 6)
+		master.must_eat_option = 1;
+	if (set_argv(argc, argv, &master.input_info) == FAILURE)
+		return (input_error(&master));
+	if (set_malloc(&master) == FAILURE)
+		return (malloc_error(&master));
+	set_mutexes(&master.mutexes, master.input_info.philo_max);
+	if (set_threads_info(&master) == FAILURE)
+		return (gettime_error(&master));
+	if (launch_threads(&master) == FAILURE)
+		return (threads_error(&master));
+	wait_threads(&master);
+	pthread_join(*master.grim_reaper_thread, NULL);
+	report_death(&master);
+	destroy_mutexes(&master.mutexes, master.input_info.philo_max);
+	free_master(&master);
 }
