@@ -12,7 +12,8 @@
 
 #include "philo.h"
 
-static void	set_one_thread_info(t_master *master, int philo_num, t_time_us start_clock_us)
+static void	set_one_thread_info(t_master *master, int philo_num,
+	t_time_us start_clock_us)
 {
 	t_philo_thread_info	*philo_info;
 
@@ -26,10 +27,12 @@ static void	set_one_thread_info(t_master *master, int philo_num, t_time_us start
 	philo_info->time_to_die_us = master->input_info.time_to_die_us;
 	philo_info->time_to_eat_us = master->input_info.time_to_eat_us;
 	philo_info->time_to_sleep_us = master->input_info.time_to_sleep_us;
-	philo_info->rfork_lock =
-		&master->mutexes.forks_lock[philo_num % master->input_info.philo_max];
-	philo_info->lfork_lock =
-		&master->mutexes.forks_lock[(philo_num + 1) % master->input_info.philo_max];
+	philo_info->rfork_lock
+		= &master->mutexes.forks_lock[philo_num
+		% master->input_info.philo_max];
+	philo_info->lfork_lock
+		= &master->mutexes.forks_lock[(philo_num + 1)
+		% master->input_info.philo_max];
 	philo_info->write_lock = &master->mutexes.write_lock;
 	philo_info->flag_lock = &master->mutexes.flag_lock;
 	philo_info->must_eat_option = master->must_eat_option;

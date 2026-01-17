@@ -1,11 +1,21 @@
-#include "philo.h"
-#include <pthread.h>
-#include <unistd.h>
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   philo_action.c                                     :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: tozaki <tozaki@student.42tokyo.jp>         +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/01/17 16:51:43 by tozaki            #+#    #+#             */
+/*   Updated: 2026/01/17 16:51:48 by tozaki           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
-int	philo_busy_wait_usleep(t_philo_thread_info *philo_info, useconds_t wait_time_us)
+#include "philo.h"
+
+int	philo_usleep(t_philo_thread_info *philo_info, useconds_t wait_time_us)
 {
 	t_time_us	start_clock_us;
-	t_time_us	now_us;
+	t_time_us	now_clock_us;
 	size_t		i;
 
 	if (get_time_us(&start_clock_us) == FAILURE)
@@ -13,9 +23,9 @@ int	philo_busy_wait_usleep(t_philo_thread_info *philo_info, useconds_t wait_time
 	i = 0;
 	while (1)
 	{
-		if (get_time_us(&now_us) == FAILURE)
+		if (get_time_us(&now_clock_us) == FAILURE)
 			return (GET_TIME_ERROR);
-		if (now_us - start_clock_us > wait_time_us)
+		if (now_clock_us - start_clock_us > wait_time_us)
 			break ;
 		if (is_finished(philo_info) == FAILURE)
 			return (FAILURE);
@@ -39,8 +49,6 @@ int	philo_write(t_philo_thread_info *philo_info, char *msg)
 
 int	philo_eat(t_philo_thread_info *philo_info)
 {
-	t_time_us	now_time_us;
-
 	philo_write(philo_info, "is thinking");
 	pthread_mutex_lock(philo_info->rfork_lock);
 	if (philo_write(philo_info, "has taken a fork") == GET_TIME_ERROR)
@@ -52,9 +60,7 @@ int	philo_eat(t_philo_thread_info *philo_info)
 		return (GET_TIME_ERROR);
 	if (philo_write(philo_info, "is eating") == GET_TIME_ERROR)
 		return (GET_TIME_ERROR);
-	if (get_time_duration_us(&now_time_us, philo_info->start_clock_us) == FAILURE)
-		return (GET_TIME_ERROR);
-	if (philo_busy_wait_usleep(philo_info, philo_info->time_to_eat_us) == FAILURE)
+	if (philo_usleep(philo_info, philo_info->time_to_eat_us) == FAILURE)
 	{
 		pthread_mutex_unlock(philo_info->rfork_lock);
 		pthread_mutex_unlock(philo_info->lfork_lock);
@@ -68,26 +74,18 @@ int	philo_eat(t_philo_thread_info *philo_info)
 
 int	philo_sleep(t_philo_thread_info *philo_info)
 {
-	t_time_us	now_time_us;
-
 	if (philo_write(philo_info, "is sleeping") == GET_TIME_ERROR)
 		return (GET_TIME_ERROR);
-	if (get_time_duration_us(&now_time_us, philo_info->start_clock_us) == FAILURE)
-		return (GET_TIME_ERROR);
-	if (philo_busy_wait_usleep(philo_info, philo_info->time_to_sleep_us) == FAILURE)
+	if (philo_usleep(philo_info, philo_info->time_to_sleep_us) == FAILURE)
 		return (FAILURE);
 	return (SUCCESS);
 }
 
 int	philo_think(t_philo_thread_info *philo_info)
 {
-	t_time_us	now_time_us;
-
 	if (philo_write(philo_info, "is thinking") == GET_TIME_ERROR)
 		return (GET_TIME_ERROR);
-	if (get_time_duration_us(&now_time_us, philo_info->start_clock_us) == FAILURE)
-		return (GET_TIME_ERROR);
-	if (philo_busy_wait_usleep(philo_info, philo_info->time_to_think_us) == FAILURE)
+	if (philo_usleep(philo_info, philo_info->time_to_think_us) == FAILURE)
 		return (FAILURE);
 	return (SUCCESS);
 }

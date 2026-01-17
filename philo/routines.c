@@ -25,8 +25,6 @@ void	*philo_routine(void *info)
 				return (NULL);
 			if (philo_sleep(philo_info) == FAILURE)
 				return (NULL);
-			// if (philo_think(philo_info) == FAILURE)
-			// 	return (NULL);
 		}
 	}
 	else
@@ -35,8 +33,6 @@ void	*philo_routine(void *info)
 		{
 			if (philo_sleep(philo_info) == FAILURE)
 				return (NULL);
-			// if (philo_think(philo_info) == FAILURE)
-			// 	return (NULL);
 			if (philo_eat(philo_info) == FAILURE)
 				return (NULL);
 		}
@@ -87,7 +83,7 @@ void	*grim_reaper_routine(void *grim_info_void)
 		{
 			*grim_info->dead_philo_name = i;
 			grim_info->term_time_us = now_clock_us - grim_info->start_clock_us;
-			break;
+			break ;
 		}
 		i = (i + 1) % grim_info->philo_max;
 	}

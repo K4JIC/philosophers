@@ -28,23 +28,23 @@ int	set_malloc(t_master *master)
 {
 	if (!master->input_info.philo_max)
 		return (FAILURE);
-	master->philo_threads = ft_calloc(sizeof(pthread_t) *
-						master->input_info.philo_max);
+	master->philo_threads = ft_calloc(sizeof(pthread_t)
+			* master->input_info.philo_max);
 	if (!master->philo_threads)
 		return (FAILURE);
 	master->grim_reaper_thread = ft_calloc(sizeof(pthread_t));
 	if (!master->grim_reaper_thread)
 		return (free_master(master), FAILURE);
-	master->philos_info = ft_calloc(sizeof(t_philo_thread_info) *
-						master->input_info.philo_max);
+	master->philos_info = ft_calloc(sizeof(t_philo_thread_info)
+			* master->input_info.philo_max);
 	if (!master->philos_info)
 		return (free_master(master), FAILURE);
-	master->mutexes.forks_lock = ft_calloc(sizeof(pthread_mutex_t) *
-						master->input_info.philo_max);
+	master->mutexes.forks_lock = ft_calloc(sizeof(pthread_mutex_t)
+			* master->input_info.philo_max);
 	if (!master->mutexes.forks_lock)
 		return (free_master(master), FAILURE);
-	master->last_eat_clock_us = ft_calloc(sizeof(t_time_us) *
-						master->input_info.philo_max);
+	master->last_eat_clock_us = ft_calloc(sizeof(t_time_us)
+			* master->input_info.philo_max);
 	if (!master->last_eat_clock_us)
 		return (free_master(master), FAILURE);
 	return (SUCCESS);

@@ -6,13 +6,11 @@
 /*   By: tozaki <tozaki@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/28 18:09:42 by tozaki            #+#    #+#             */
-/*   Updated: 2026/01/13 17:07:51 by tozaki           ###   ########.fr       */
+/*   Updated: 2026/01/17 16:52:42 by tozaki           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
-#include <string.h>
-#include <stdio.h>
 
 void	wait_threads(t_master *master)
 {
@@ -30,7 +28,7 @@ void	report_death(t_master *master)
 {
 	if (*master->dead_philo_name != -1)
 		printf("%04lld %d died\n", master->grim_info.term_time_us / 1000,
-				*master->dead_philo_name);
+			*master->dead_philo_name);
 }
 
 int	main(int argc, char **argv)

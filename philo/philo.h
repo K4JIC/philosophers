@@ -30,9 +30,9 @@
 // # define philo_gettimeofday gettimeofday
 // int	philo_gettimeofday(struct timeval *tv, struct timezone *tz);
 
-typedef unsigned long long t_time_us;
+typedef unsigned long long	t_time_us;
 
-enum error_identifier
+enum e_error_identifier
 {
 	GET_TIME_ERROR=-1,
 	INPUTERROR,
@@ -89,17 +89,17 @@ typedef struct s_grim_reaper_thread_info
 typedef struct s_master
 {
 	// threads info
-	t_input_info			input_info;
-	t_philo_thread_info		*philos_info;
+	t_input_info				input_info;
+	t_philo_thread_info			*philos_info;
 	t_grim_reaper_thread_info	grim_info;
 	// threads pointer
-	pthread_t				*philo_threads;
-	pthread_t				*grim_reaper_thread;
+	pthread_t					*philo_threads;
+	pthread_t					*grim_reaper_thread;
 	// materials shared between different kinds of threads
-	int						must_eat_option;
-	t_mutexes				mutexes;
-	t_time_us				*last_eat_clock_us;
-	int						*dead_philo_name;
+	int							must_eat_option;
+	t_mutexes					mutexes;
+	t_time_us					*last_eat_clock_us;
+	int							*dead_philo_name;
 }					t_master;
 
 /*set_argv.c*/
@@ -117,31 +117,31 @@ void	destroy_mutexes(t_mutexes *mutex, int philo_max);
 int		set_threads_info(t_master *master);
 
 /*routine_finish.c*/
-int	is_finished(t_philo_thread_info *philo_info);
+int		is_finished(t_philo_thread_info *philo_info);
 
 /*routine_action.c*/
-int	philo_eat(t_philo_thread_info *philo_info);
-int	philo_sleep(t_philo_thread_info *philo_info);
-int	philo_think(t_philo_thread_info *philo_info);
+int		philo_eat(t_philo_thread_info *philo_info);
+int		philo_sleep(t_philo_thread_info *philo_info);
+int		philo_think(t_philo_thread_info *philo_info);
 
 /*routine.c*/
 void	*philo_routine(void *info);
 void	*observe_routine(void *master_void);
 void	*grim_reaper_routine(void *gr_info_void);
-int	philo_write(t_philo_thread_info *philo_info, char *msg);// 後で消す
+int		philo_write(t_philo_thread_info *philo_info, char *msg);// 後で消す
 
 /*launch_threads.c*/
 int		launch_threads(t_master *master);
 
 /*raise_error.c*/
-int	input_error(t_master *master);
-int	malloc_error(t_master *master);
-int	gettime_error(t_master *master);
-int	threads_error(t_master *master);
+int		input_error(t_master *master);
+int		malloc_error(t_master *master);
+int		gettime_error(t_master *master);
+int		threads_error(t_master *master);
 
 /*time_utils.c */
-int	get_time_us(t_time_us *time_us);
-int	get_time_duration_us(t_time_us *time_us,
-						t_time_us start_clock_us);
+int		get_time_us(t_time_us *time_us);
+int		get_time_duration_us(t_time_us *time_us,
+			t_time_us start_clock_us);
 
 #endif

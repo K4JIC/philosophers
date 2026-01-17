@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   philo_finish.c                                     :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: tozaki <tozaki@student.42tokyo.jp>         +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/01/17 16:51:51 by tozaki            #+#    #+#             */
+/*   Updated: 2026/01/17 16:51:53 by tozaki           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "philo.h"
 
 static int	process_is_finished(t_philo_thread_info *philo_info)
@@ -18,7 +30,6 @@ static int	is_full(t_philo_thread_info *philo_info)
 		return (0);
 	if (philo_info->eat_count >= philo_info->must_eat)
 	{
-		// philo_write(philo_info, "is_full() fail");
 		return (1);
 	}
 	return (0);

@@ -11,11 +11,7 @@
 /* ************************************************************************** */
 
 #include "philo.h"
-/**
- * receive "char **argv"
- * pack "char **argv" in "t_input_info input_info"
- * return input_info
- */
+
 static int	ft_isnum(char c)
 {
 	return ('0' <= c && c <= '9');
@@ -53,18 +49,16 @@ static int	is_integer(char *ascii)
 	{
 		if (len < 11)
 			return (1);
-		if (len > 11)
-			return (0);
-		if (len == 11 && ft_strcmp(ascii, INT_MIN_CHAR) > 0)
+		if (len > 11
+			|| (len == 11 && ft_strcmp(ascii, INT_MIN_CHAR) > 0))
 			return (0);
 	}
 	else
 	{
 		if (len < 10)
 			return (1);
-		if (len > 10)
-			return (0);
-		if (len == 10 && ft_strcmp(ascii, INT_MAX_CHAR) > 0)
+		if (len > 10
+			|| (len == 10 && ft_strcmp(ascii, INT_MAX_CHAR) > 0))
 			return (0);
 	}
 	return (1);

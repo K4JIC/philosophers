@@ -11,7 +11,6 @@
 /* ************************************************************************** */
 
 #include "philo.h"
-#include <unistd.h>
 
 static t_time_us	convert_tv_to_ull(struct timeval tv)
 {
