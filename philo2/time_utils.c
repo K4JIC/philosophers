@@ -32,12 +32,12 @@ int	get_time_us(unsigned long long *time_us)
 }
 
 int	get_time_duration_us(unsigned long long *time_us,
-						unsigned long long start_time_us)
+						unsigned long long start_clock_us)
 {
 	unsigned long long	now_time_us;
 
 	if (get_time_us(&now_time_us) == GET_TIME_ERROR)
 		return (GET_TIME_ERROR);
-	*time_us = now_time_us - start_time_us;
+	*time_us = now_time_us - start_clock_us;
 	return (SUCCESS);
 }

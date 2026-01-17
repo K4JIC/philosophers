@@ -61,10 +61,10 @@ void	*philo_routine(void *info)
 // 	i = 0;
 // 	while (1)
 // 	{
-// 		if (master->last_eat_us[i] != 0)
+// 		if (master->last_eat_clock_us[i] != 0)
 // 		{
 // 			if (get_time_duration_us(&master->term_time_us,
-// 									master->philos_info->start_time_us)
+// 									master->philos_info->start_clock_us)
 // 				== GET_TIME_ERROR)
 // 				return (NULL);
 // 			return (NULL);
@@ -88,7 +88,7 @@ void	*grim_reaper_routine(void *grim_info_void)
 	{
 		if (get_time_us(&now_us) == FAILURE)
 			return (NULL);
-		hungry_time_us = now_us - grim_info->last_eat_us[i];
+		hungry_time_us = now_us - grim_info->last_eat_clock_us[i];
 		if (hungry_time_us > grim_info->time_to_die_us)
 		{
 			*grim_info->dead_philo_name = i;

@@ -27,6 +27,9 @@
 # define INT_MAX_CHAR "2147483647"
 # define INT_MIN_CHAR "-2147483648"
 
+// # define philo_gettimeofday gettimeofday
+// int	philo_gettimeofday(struct timeval *tv, struct timezone *tz);
+
 typedef unsigned long long t_time_us;
 
 enum error_identifier
@@ -54,8 +57,8 @@ typedef struct s_mutexes
 
 typedef struct s_thread_info
 {
-	t_time_us			start_time_us;
-	t_time_us			*last_eat_us;
+	t_time_us			start_clock_us;
+	t_time_us			*last_eat_clock_us;
 	t_time_us			unit_time_us;
 	int					philo_num;
 	int					philo_max;
@@ -76,10 +79,10 @@ typedef struct s_thread_info
 typedef struct s_grim_reaper_thread_info
 {
 	int			philo_max;
-	t_time_us	start_time_us;
+	t_time_us	start_clock_us;
 	t_time_us	time_to_die_us;
 	t_time_us	term_time_us;
-	t_time_us	*last_eat_us;
+	t_time_us	*last_eat_clock_us;
 	int			*dead_philo_name;
 }				t_grim_reaper_thread_info;
 
@@ -95,7 +98,7 @@ typedef struct s_master
 	// materials shared between different kinds of threads
 	int						must_eat_option;
 	t_mutexes				mutexes;
-	t_time_us				*last_eat_us;
+	t_time_us				*last_eat_clock_us;
 	int						*dead_philo_name;
 }					t_master;
 
@@ -139,6 +142,6 @@ int	threads_error(t_master *master);
 /*time_utils.c */
 int	get_time_us(t_time_us *time_us);
 int	get_time_duration_us(t_time_us *time_us,
-						t_time_us start_time_us);
+						t_time_us start_clock_us);
 
 #endif

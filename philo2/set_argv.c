@@ -11,7 +11,6 @@
 /* ************************************************************************** */
 
 #include "philo.h"
-#include <stddef.h>
 /**
  * receive "char **argv"
  * pack "char **argv" in "t_input_info input_info"

@@ -43,9 +43,9 @@ int	set_malloc(t_master *master)
 						master->input_info.philo_max);
 	if (!master->mutexes.forks_lock)
 		return (free_master(master), FAILURE);
-	master->last_eat_us = ft_calloc(sizeof(t_time_us) *
+	master->last_eat_clock_us = ft_calloc(sizeof(t_time_us) *
 						master->input_info.philo_max);
-	if (!master->last_eat_us)
+	if (!master->last_eat_clock_us)
 		return (free_master(master), FAILURE);
 	return (SUCCESS);
 }
@@ -60,6 +60,6 @@ void	free_master(t_master *master)
 		free(master->philos_info);
 	if (master->mutexes.forks_lock)
 		free(master->mutexes.forks_lock);
-	if (master->last_eat_us)
-		free(master->last_eat_us);
+	if (master->last_eat_clock_us)
+		free(master->last_eat_clock_us);
 }

@@ -12,15 +12,15 @@
 
 #include "philo.h"
 
-static void	set_one_thread_info(t_master *master, int philo_num, t_time_us start_time_us)
+static void	set_one_thread_info(t_master *master, int philo_num, t_time_us start_clock_us)
 {
 	t_philo_thread_info	*philo_info;
 
 	philo_info = &master->philos_info[philo_num];
 	memset(philo_info, 0, sizeof(t_philo_thread_info));
-	philo_info->start_time_us = start_time_us;
-	philo_info->last_eat_us = &master->last_eat_us[philo_num];
-	*philo_info->last_eat_us = start_time_us;
+	philo_info->start_clock_us = start_clock_us;
+	philo_info->last_eat_clock_us = &master->last_eat_clock_us[philo_num];
+	*philo_info->last_eat_clock_us = start_clock_us;
 	philo_info->philo_num = philo_num;
 	philo_info->philo_max = master->input_info.philo_max;
 	philo_info->time_to_die_us = master->input_info.time_to_die_us;
@@ -40,31 +40,31 @@ static void	set_one_thread_info(t_master *master, int philo_num, t_time_us start
 	philo_info->dead_philo_name = master->dead_philo_name;
 }
 
-void	set_grim_reaper_info(t_master *master, t_time_us start_time_us)
+void	set_grim_reaper_info(t_master *master, t_time_us start_clock_us)
 {
 	t_grim_reaper_thread_info	*grim_info;
 
 	grim_info = &master->grim_info;
 	grim_info->philo_max = master->input_info.philo_max;
-	grim_info->start_time_us = start_time_us;
+	grim_info->start_clock_us = start_clock_us;
 	grim_info->time_to_die_us = master->input_info.time_to_die_us;
 	grim_info->term_time_us = 0;
-	grim_info->last_eat_us = master->last_eat_us;
+	grim_info->last_eat_clock_us = master->last_eat_clock_us;
 	grim_info->dead_philo_name = master->dead_philo_name;
 }
 
 int	set_threads_info(t_master *master)
 {
-	t_time_us	start_time_us;
+	t_time_us	start_clock_us;
 	int			i;
 
-	if (get_time_us(&start_time_us) == FAILURE)
+	if (get_time_us(&start_clock_us) == FAILURE)
 		return (FAILURE);
-	set_grim_reaper_info(master, start_time_us);
+	set_grim_reaper_info(master, start_clock_us);
 	i = 0;
 	while (i < master->input_info.philo_max)
 	{
-		set_one_thread_info(master, i, start_time_us);
+		set_one_thread_info(master, i, start_clock_us);
 		i++;
 	}
 	return (SUCCESS);
