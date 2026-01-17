@@ -16,9 +16,9 @@ static int	process_is_finished(t_philo_thread_info *philo_info)
 {
 	int	ret;
 
-	pthread_mutex_lock(philo_info->flag_lock);
+	pthread_mutex_lock(philo_info->death_note_lock);
 	ret = *philo_info->dead_philo_name;
-	pthread_mutex_unlock(philo_info->flag_lock);
+	pthread_mutex_unlock(philo_info->death_note_lock);
 	if (ret != -1)
 		return (1);
 	return (0);

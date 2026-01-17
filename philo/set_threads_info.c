@@ -34,7 +34,8 @@ static void	set_one_thread_info(t_master *master, int philo_num,
 		= &master->mutexes.forks_lock[(philo_num + 1)
 		% master->input_info.philo_max];
 	philo_info->write_lock = &master->mutexes.write_lock;
-	philo_info->flag_lock = &master->mutexes.flag_lock;
+	philo_info->death_note_lock = &master->mutexes.death_note_lock;
+	philo_info->last_eat_lock = &master->mutexes.last_eat_lock;
 	philo_info->must_eat_option = master->must_eat_option;
 	philo_info->must_eat = master->input_info.philo_must_eat;
 	philo_info->dead_philo_name = master->dead_philo_name;
@@ -50,7 +51,9 @@ void	set_grim_reaper_info(t_master *master, t_time_us start_clock_us)
 	grim_info->time_to_die_us = master->input_info.time_to_die_us;
 	grim_info->term_time_us = 0;
 	grim_info->last_eat_clock_us = master->last_eat_clock_us;
+	grim_info->last_eat_lock = &master->mutexes.last_eat_lock;
 	grim_info->dead_philo_name = master->dead_philo_name;
+	grim_info->death_note_lock = &master->mutexes.death_note_lock;
 }
 
 int	set_threads_info(t_master *master)

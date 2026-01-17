@@ -29,8 +29,9 @@ static int	ft_puterrmsg(char *errmsg)
 static int	raise_error_and_exit(t_master *master, char *errmsg)
 {
 	free_master(master);
-	ft_puterrmsg(errmsg);
-	return (1);
+	if (ft_puterrmsg(errmsg) == FAILURE)
+		return (FAILURE);
+	return (SUCCESS);
 }
 
 int	input_error(t_master *master)
@@ -46,6 +47,13 @@ int	malloc_error(t_master *master)
 int	gettime_error(t_master *master)
 {
 	return (raise_error_and_exit(master, "Error : gettimeofday() FAILUREed.\n"));
+}
+
+int	gettime_error_inner_thread(void)
+{
+	if (ft_puterrmsg("gettimeofday() occured an error.\n") == FAILURE)
+		return (FAILURE);
+	return (SUCCESS);
 }
 
 int	threads_error(t_master *master)

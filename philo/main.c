@@ -28,7 +28,7 @@ void	report_death(t_master *master)
 {
 	if (*master->dead_philo_name != -1)
 		printf("%04lld %d died\n", master->grim_info.term_time_us / 1000,
-			*master->dead_philo_name);
+			*master->dead_philo_name + 1);
 }
 
 int	main(int argc, char **argv)

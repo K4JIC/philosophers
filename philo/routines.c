@@ -11,19 +11,27 @@
 /* ************************************************************************** */
 
 #include "philo.h"
+#include <pthread.h>
 
 void	*philo_routine(void *info)
 {
 	t_philo_thread_info	*philo_info;
+	int					res;
 
 	philo_info = (t_philo_thread_info *)info;
 	if (philo_info->philo_num % 2 == 0)
 	{
 		while (1)
 		{
-			if (philo_eat(philo_info) == FAILURE)
+			res = philo_eat(philo_info);
+			if (res == GET_TIME_ERROR)
+				return (gettime_error_inner_thread(), NULL);
+			if (res == FAILURE)
 				return (NULL);
-			if (philo_sleep(philo_info) == FAILURE)
+			res = philo_sleep(philo_info);
+			if (res == GET_TIME_ERROR)
+				return (gettime_error_inner_thread(), NULL);
+			if (res == FAILURE)
 				return (NULL);
 		}
 	}
@@ -31,9 +39,15 @@ void	*philo_routine(void *info)
 	{
 		while (1)
 		{
-			if (philo_sleep(philo_info) == FAILURE)
+			res = philo_sleep(philo_info);
+			if (res == GET_TIME_ERROR)
+				return (gettime_error_inner_thread(), NULL);
+			if (res == FAILURE)
 				return (NULL);
-			if (philo_eat(philo_info) == FAILURE)
+			res = philo_eat(philo_info);
+			if (res == GET_TIME_ERROR)
+				return (gettime_error_inner_thread(), NULL);
+			if (res == FAILURE)
 				return (NULL);
 		}
 	}
@@ -78,10 +92,14 @@ void	*grim_reaper_routine(void *grim_info_void)
 	{
 		if (get_time_us(&now_clock_us) == FAILURE)
 			return (NULL);
+		pthread_mutex_lock(grim_info->last_eat_lock);
 		hungry_time_us = now_clock_us - grim_info->last_eat_clock_us[i];
+		pthread_mutex_unlock(grim_info->last_eat_lock);
 		if (hungry_time_us > grim_info->time_to_die_us)
 		{
+			pthread_mutex_lock(grim_info->death_note_lock);
 			*grim_info->dead_philo_name = i;
+			pthread_mutex_unlock(grim_info->death_note_lock);
 			grim_info->term_time_us = now_clock_us - grim_info->start_clock_us;
 			break ;
 		}
