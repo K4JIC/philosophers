@@ -39,6 +39,12 @@ enum e_error_identifier
 	MALLOCERROR
 };
 
+typedef struct s_mu_val
+{
+	int				val;
+	pthread_mutex_t	mu;
+}					t_mu_val;
+
 typedef struct s_input_info
 {
 	int			philo_max;
