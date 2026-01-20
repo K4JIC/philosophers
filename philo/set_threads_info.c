@@ -52,6 +52,7 @@ void	set_grim_reaper_info(t_master *master, t_time_us start_clock_us)
 	grim_info->term_time_us = 0;
 	grim_info->last_eat_clock_us = master->last_eat_clock_us;
 	grim_info->last_eat_lock = &master->mutexes.last_eat_lock;
+	grim_info->write_lock = &master->mutexes.write_lock;
 	grim_info->dead_philo_name = master->dead_philo_name;
 	grim_info->death_note_lock = &master->mutexes.death_note_lock;
 }

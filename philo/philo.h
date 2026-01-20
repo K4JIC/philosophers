@@ -92,6 +92,7 @@ typedef struct s_grim_reaper_thread_info
 	t_time_us			term_time_us;
 	t_time_us			*last_eat_clock_us;
 	pthread_mutex_t		*last_eat_lock;
+	pthread_mutex_t		*write_lock;
 	int					*dead_philo_name;
 	pthread_mutex_t		*death_note_lock;
 }				t_grim_reaper_thread_info;
@@ -131,6 +132,7 @@ int		is_finished(t_philo_thread_info *philo_info);
 
 /*routine_action.c*/
 int		philo_eat(t_philo_thread_info *philo_info);
+int		philo_eat_rev(t_philo_thread_info *philo_info);
 int		philo_sleep(t_philo_thread_info *philo_info);
 int		philo_think(t_philo_thread_info *philo_info);
 

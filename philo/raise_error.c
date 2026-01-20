@@ -41,22 +41,22 @@ int	input_error(t_master *master)
 
 int	malloc_error(t_master *master)
 {
-	return (raise_error_and_exit(master, "Error : malloc() FAILUREed.\n"));
+	return (raise_error_and_exit(master, "Error : malloc() failed.\n"));
 }
 
 int	gettime_error(t_master *master)
 {
-	return (raise_error_and_exit(master, "Error : gettimeofday() FAILUREed.\n"));
+	return (raise_error_and_exit(master, "Error : gettimeofday() failed before philo threads begin.\n"));
 }
 
 int	gettime_error_inner_thread(void)
 {
-	if (ft_puterrmsg("gettimeofday() occured an error.\n") == FAILURE)
+	if (ft_puterrmsg("gettimeofday() failed after philo threads begin.\n") == FAILURE)
 		return (FAILURE);
 	return (SUCCESS);
 }
 
 int	threads_error(t_master *master)
 {
-	return (raise_error_and_exit(master, "Error : FAILUREed to launch threads.\n"));
+	return (raise_error_and_exit(master, "Error : failed to launch threads.\n"));
 }
