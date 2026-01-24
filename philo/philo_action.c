@@ -50,8 +50,6 @@ int	philo_write(t_philo_thread_info *philo_info, char *msg)
 
 int	philo_eat(t_philo_thread_info *philo_info)
 {
-	if (philo_write(philo_info, "is thinking") == FAILURE)
-		return (GET_TIME_ERROR);
 	pthread_mutex_lock(philo_info->rfork_lock);
 	if (philo_write(philo_info, "has taken a fork") == GET_TIME_ERROR)
 		return (GET_TIME_ERROR);
@@ -78,8 +76,6 @@ int	philo_eat(t_philo_thread_info *philo_info)
 
 int	philo_eat_rev(t_philo_thread_info *philo_info)
 {
-	if (philo_write(philo_info, "is thinking") == FAILURE)
-		return (GET_TIME_ERROR);
 	pthread_mutex_lock(philo_info->lfork_lock);
 	if (philo_write(philo_info, "has taken a fork") == GET_TIME_ERROR)
 		return (GET_TIME_ERROR);
