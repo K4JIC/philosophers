@@ -16,10 +16,10 @@ static int	process_is_finished(t_philo_thread_info *philo_info)
 {
 	int	ret;
 
-	pthread_mutex_lock(philo_info->death_note_lock);
-	ret = *philo_info->dead_philo_name;
-	pthread_mutex_unlock(philo_info->death_note_lock);
-	if (ret != -1)
+	pthread_mutex_lock(philo_info->finish_flag_lock);
+	ret = *philo_info->finish_flag;
+	pthread_mutex_unlock(philo_info->finish_flag_lock);
+	if (ret != FLAG_INIT)
 		return (1);
 	return (0);
 }
@@ -28,10 +28,8 @@ static int	is_full(t_philo_thread_info *philo_info)
 {
 	if (!philo_info->must_eat_option)
 		return (0);
-	if (philo_info->eat_count >= philo_info->must_eat)
-	{
+	if (philo_info->eat_count == philo_info->must_eat)
 		return (1);
-	}
 	return (0);
 }
 
@@ -40,6 +38,11 @@ int	is_finished(t_philo_thread_info *philo_info)
 	if (process_is_finished(philo_info))
 		return (FAILURE);
 	if (is_full(philo_info))
-		return (FAILURE);
+	{
+		pthread_mutex_lock(philo_info->full_philo_lock);
+		*philo_info->full_philo_count += 1;
+		pthread_mutex_unlock(philo_info->full_philo_lock);
+		return (SUCCESS);
+	}
 	return (SUCCESS);
 }

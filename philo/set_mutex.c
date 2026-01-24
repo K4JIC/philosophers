@@ -12,17 +12,15 @@
 
 #include "philo.h"
 
-/**
- * pthread_mutex_init() always returns 0
- */
-
+// pthread_mutex_init() always returns 0
 void	set_mutexes(t_mutexes *mutexes, int philo_max)
 {
 	int	i;
 
 	pthread_mutex_init(&mutexes->write_lock, NULL);
-	pthread_mutex_init(&mutexes->death_note_lock, NULL);
+	pthread_mutex_init(&mutexes->finish_flag_lock, NULL);
 	pthread_mutex_init(&mutexes->last_eat_lock, NULL);
+	pthread_mutex_init(&mutexes->full_philo_lock, NULL);
 	i = 0;
 	while (i < philo_max)
 	{
@@ -36,8 +34,9 @@ void	destroy_mutexes(t_mutexes *mutexes, int philo_max)
 	int	i;
 
 	pthread_mutex_destroy(&mutexes->write_lock);
-	pthread_mutex_destroy(&mutexes->death_note_lock);
+	pthread_mutex_destroy(&mutexes->finish_flag_lock);
 	pthread_mutex_destroy(&mutexes->last_eat_lock);
+	pthread_mutex_destroy(&mutexes->full_philo_lock);
 	i = 0;
 	while (i < philo_max)
 	{

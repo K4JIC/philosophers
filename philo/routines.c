@@ -12,89 +12,79 @@
 
 #include "philo.h"
 #include <pthread.h>
-#include <stdio.h>
 
-void	*philo_routine(void *info)
+static void	*lonly_philo_routine(t_philo_thread_info *philo_info)
 {
-	t_philo_thread_info	*philo_info;
-	int					res;
+	int	res;
 
-	philo_info = (t_philo_thread_info *)info;
-	// if (philo_info->philo_num == 0)
-	// {
-	// 	while (1)
-	// 	{
-	// 		res = philo_eat_rev(philo_info);
-	// 		if (res == GET_TIME_ERROR)
-	// 			return (gettime_error_inner_thread(), NULL);
-	// 		if (res == FAILURE)
-	// 			return (NULL);
-	// 		res = philo_sleep(philo_info);
-	// 		if (res == GET_TIME_ERROR)
-	// 			return (gettime_error_inner_thread(), NULL);
-	// 		if (res == FAILURE)
-	// 			return (NULL);
-	// 	}
-	// }
-	if (philo_info->philo_num % 2 == 0)
+	res = lonly_philo_sleep(philo_info);
+	if (res == GET_TIME_ERROR)
+		return (gettime_error_inner_thread(), NULL);
+	return (NULL);
+}
+
+static void	*odd_philo_routine(t_philo_thread_info *philo_info)
+{
+	int	res;
+
+	while (1)
 	{
-		while (1)
-		{
-			res = philo_eat(philo_info);
-			if (res == GET_TIME_ERROR)
-				return (gettime_error_inner_thread(), NULL);
-			if (res == FAILURE)
-				return (NULL);
-			res = philo_sleep(philo_info);
-			if (res == GET_TIME_ERROR)
-				return (gettime_error_inner_thread(), NULL);
-			if (res == FAILURE)
-				return (NULL);
-		}
-	}
-	else
-	{
-		while (1)
-		{
-			res = philo_sleep(philo_info);
-			if (res == GET_TIME_ERROR)
-				return (gettime_error_inner_thread(), NULL);
-			if (res == FAILURE)
-				return (NULL);
-			res = philo_eat_rev(philo_info);
-			if (res == GET_TIME_ERROR)
-				return (gettime_error_inner_thread(), NULL);
-			if (res == FAILURE)
-				return (NULL);
-		}
+		res = philo_eat(philo_info);
+		if (res == GET_TIME_ERROR)
+			return (gettime_error_inner_thread(), NULL);
+		if (res == FAILURE)
+			return (NULL);
+		res = philo_sleep(philo_info);
+		if (res == GET_TIME_ERROR)
+			return (gettime_error_inner_thread(), NULL);
+		if (res == FAILURE)
+			return (NULL);
+		res = philo_think(philo_info);
+		if (res == GET_TIME_ERROR)
+			return (gettime_error_inner_thread(), NULL);
+		if (res == FAILURE)
+			return (NULL);
 	}
 	return (NULL);
 }
 
-// void	*observe_routine(void *master_void)
-// {
-// 	t_master	*master;
-// 	int			philo_max;
-// 	int			i;
+static void	*even_philo_routine(t_philo_thread_info *philo_info)
+{
+	int	res;
 
-// 	master = (t_master *)master_void;
-// 	philo_max = master->input_info.philo_max;
-// 	i = 0;
-// 	while (1)
-// 	{
-// 		if (master->last_eat_clock_us[i] != 0)
-// 		{
-// 			if (get_time_duration_us(&master->term_time_us,
-// 									master->philos_info->start_clock_us)
-// 				== GET_TIME_ERROR)
-// 				return (NULL);
-// 			return (NULL);
-// 		}
-// 		i = (i + 1) % philo_max;
-// 		usleep(1);
-// 	}
-// 	return (NULL);
-// }
+	while (1)
+	{
+		res = philo_sleep(philo_info);
+		if (res == GET_TIME_ERROR)
+			return (gettime_error_inner_thread(), NULL);
+		if (res == FAILURE)
+			return (NULL);
+		res = philo_eat_rev(philo_info);
+		if (res == GET_TIME_ERROR)
+			return (gettime_error_inner_thread(), NULL);
+		if (res == FAILURE)
+			return (NULL);
+		res = philo_think(philo_info);
+		if (res == GET_TIME_ERROR)
+			return (gettime_error_inner_thread(), NULL);
+		if (res == FAILURE)
+			return (NULL);
+	}
+	return (NULL);
+}
+
+void	*philo_routine(void *info)
+{
+	t_philo_thread_info	*philo_info;
+
+	philo_info = (t_philo_thread_info *)info;
+	if (philo_info->philo_max == 1)
+		return (lonly_philo_routine(philo_info));
+	if (philo_info->philo_num % 2 == 0)
+		return (odd_philo_routine(philo_info));
+	else
+		return (even_philo_routine(philo_info));
+}
 
 void	*grim_reaper_routine(void *grim_info_void)
 {
@@ -119,15 +109,19 @@ void	*grim_reaper_routine(void *grim_info_void)
 			hungry_time_us = 0;
 		if (hungry_time_us > grim_info->time_to_die_us)
 		{
-			pthread_mutex_lock(grim_info->write_lock);
-			printf("hungry = %lld\n", hungry_time_us / 1000);
-			pthread_mutex_unlock(grim_info->write_lock);
-			pthread_mutex_lock(grim_info->death_note_lock);
 			*grim_info->dead_philo_name = i;
-			pthread_mutex_unlock(grim_info->death_note_lock);
+			*grim_info->finish_flag = FLAG_DONE;
 			grim_info->term_time_us = now_clock_us - grim_info->start_clock_us;
 			break ;
 		}
+		pthread_mutex_lock(grim_info->full_philo_lock);
+		if (*grim_info->full_philo_count == grim_info->philo_max)
+		{
+			pthread_mutex_unlock(grim_info->full_philo_lock);
+			*grim_info->finish_flag = FLAG_DONE;
+			return (NULL);
+		}
+		pthread_mutex_unlock(grim_info->full_philo_lock);
 		i = (i + 1) % grim_info->philo_max;
 		usleep(1);
 	}

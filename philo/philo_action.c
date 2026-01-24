@@ -42,7 +42,7 @@ int	philo_write(t_philo_thread_info *philo_info, char *msg)
 	if (get_time_duration_us(&time_us, philo_info->start_clock_us) == FAILURE)
 		return (GET_TIME_ERROR);
 	pthread_mutex_lock(philo_info->write_lock);
-	if (*philo_info->dead_philo_name == -1)
+	if (*philo_info->finish_flag == FLAG_INIT)
 		printf("%04lld %d %s\n", time_us / 1000, philo_info->philo_num, msg);
 	pthread_mutex_unlock(philo_info->write_lock);
 	return (SUCCESS);
@@ -113,11 +113,30 @@ int	philo_sleep(t_philo_thread_info *philo_info)
 	return (SUCCESS);
 }
 
-int	philo_think(t_philo_thread_info *philo_info)
+int	lonly_philo_sleep(t_philo_thread_info *philo_info)
 {
+	if (philo_write(philo_info, "is sleeping") == GET_TIME_ERROR)
+		return (GET_TIME_ERROR);
+	if (philo_usleep(philo_info, philo_info->time_to_sleep_us) == FAILURE)
+		return (FAILURE);
 	if (philo_write(philo_info, "is thinking") == GET_TIME_ERROR)
 		return (GET_TIME_ERROR);
-	if (philo_usleep(philo_info, philo_info->time_to_think_us) == FAILURE)
+	if (philo_usleep(philo_info, philo_info->time_to_die_us + UNIT_TIME_US) == FAILURE)
 		return (FAILURE);
+	return (SUCCESS);
+}
+
+int	philo_think(t_philo_thread_info *philo_info)
+{
+	t_time_us	time_to_think_us;
+
+	if (philo_info->philo_max %2 == 1)
+	{
+		time_to_think_us = UNIT_TIME_US;
+		if (philo_write(philo_info, "is thinking") == GET_TIME_ERROR)
+			return (GET_TIME_ERROR);
+		if (philo_usleep(philo_info, time_to_think_us) == FAILURE)
+			return (FAILURE);
+	}
 	return (SUCCESS);
 }

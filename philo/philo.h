@@ -27,17 +27,15 @@
 # define INT_MAX_CHAR "2147483647"
 # define INT_MIN_CHAR "-2147483648"
 
+# define FLAG_INIT -1
+# define FLAG_DONE 1
+
 // # define philo_gettimeofday gettimeofday
 // int	philo_gettimeofday(struct timeval *tv, struct timezone *tz);
 
 typedef unsigned long long	t_time_us;
 
-enum e_error_identifier
-{
-	GET_TIME_ERROR=-1,
-	INPUTERROR,
-	MALLOCERROR
-};
+# define GET_TIME_ERROR -1
 
 typedef struct s_mu_val
 {
@@ -58,8 +56,9 @@ typedef struct s_mutexes
 {
 	pthread_mutex_t	*forks_lock;
 	pthread_mutex_t	write_lock;
-	pthread_mutex_t	death_note_lock;
+	pthread_mutex_t	finish_flag_lock;
 	pthread_mutex_t	last_eat_lock;
+	pthread_mutex_t	full_philo_lock;
 }						t_mutexes;
 
 typedef struct s_thread_info
@@ -76,12 +75,14 @@ typedef struct s_thread_info
 	pthread_mutex_t		*rfork_lock;
 	pthread_mutex_t		*lfork_lock;
 	pthread_mutex_t		*write_lock;
-	pthread_mutex_t		*death_note_lock;
+	pthread_mutex_t		*finish_flag_lock;
 	pthread_mutex_t		*last_eat_lock;
+	pthread_mutex_t		*full_philo_lock;
 	int					must_eat_option;
 	int					must_eat;
 	int					eat_count;
-	int					*dead_philo_name;
+	int					*full_philo_count;
+	int					*finish_flag;
 }						t_philo_thread_info;
 
 typedef struct s_grim_reaper_thread_info
@@ -93,8 +94,11 @@ typedef struct s_grim_reaper_thread_info
 	t_time_us			*last_eat_clock_us;
 	pthread_mutex_t		*last_eat_lock;
 	pthread_mutex_t		*write_lock;
+	pthread_mutex_t		*finish_flag_lock;
+	pthread_mutex_t		*full_philo_lock;
 	int					*dead_philo_name;
-	pthread_mutex_t		*death_note_lock;
+	int					*full_philo_count;
+	int					*finish_flag;
 }				t_grim_reaper_thread_info;
 
 typedef struct s_master
@@ -110,7 +114,9 @@ typedef struct s_master
 	int							must_eat_option;
 	t_mutexes					mutexes;
 	t_time_us					*last_eat_clock_us;
-	int							*dead_philo_name;
+	int							dead_philo_name;
+	int							full_philo_count;
+	int							finish_flag;
 }					t_master;
 
 /*set_argv.c*/
@@ -135,6 +141,7 @@ int		philo_eat(t_philo_thread_info *philo_info);
 int		philo_eat_rev(t_philo_thread_info *philo_info);
 int		philo_sleep(t_philo_thread_info *philo_info);
 int		philo_think(t_philo_thread_info *philo_info);
+int		lonly_philo_sleep(t_philo_thread_info *philo_info);
 
 /*routine.c*/
 void	*philo_routine(void *info);
