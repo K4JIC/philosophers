@@ -12,7 +12,7 @@
 
 #include "philo.h"
 
-static void	set_one_thread_info(t_master *master, int philo_num,
+static void	set_one_thread_constant_info(t_master *master, int philo_num,
 	t_time_us start_clock_us)
 {
 	t_philo_thread_info	*philo_info;
@@ -27,6 +27,11 @@ static void	set_one_thread_info(t_master *master, int philo_num,
 	philo_info->time_to_die_us = master->input_info.time_to_die_us;
 	philo_info->time_to_eat_us = master->input_info.time_to_eat_us;
 	philo_info->time_to_sleep_us = master->input_info.time_to_sleep_us;
+	philo_info->time_to_think_us = (master->input_info.time_to_die_us
+		- master->input_info.time_to_sleep_us
+		- master->input_info.time_to_eat_us) / 4;
+	if (philo_info->time_to_think_us < 0)
+		philo_info->time_to_think_us = 0;
 	philo_info->must_eat_option = master->must_eat_option;
 	philo_info->must_eat = master->input_info.philo_must_eat;
 	philo_info->full_philo_count = &master->full_philo_count;
@@ -80,7 +85,7 @@ int	set_threads_info(t_master *master)
 	i = 0;
 	while (i < master->input_info.philo_max)
 	{
-		set_one_thread_info(master, i, start_clock_us);
+		set_one_thread_constant_info(master, i, start_clock_us);
 		set_one_thread_mutex_info(master, i);
 		i++;
 	}

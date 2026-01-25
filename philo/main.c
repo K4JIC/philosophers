@@ -27,7 +27,7 @@ void	wait_threads(t_master *master)
 void	report_death(t_master *master)
 {
 	if (master->dead_philo_name != FLAG_INIT)
-		printf("%04lld %d died\n", master->grim_info.term_time_us / 1000,
+		printf("%-4lld %d died\n", master->grim_info.term_time_us / 1000,
 			master->dead_philo_name + 1);
 }
 

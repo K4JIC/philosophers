@@ -81,7 +81,7 @@ int	lonly_philo_sleep(t_philo_thread_info *philo_info)
 		return (FAILURE);
 	if (philo_write(philo_info, "is thinking") == GET_TIME_ERROR)
 		return (GET_TIME_ERROR);
-	if (philo_usleep(philo_info, philo_info->time_to_die_us + UNIT_TIME_US)
+	if (philo_usleep(philo_info, philo_info->time_to_die_us)
 		== FAILURE)
 		return (FAILURE);
 	return (SUCCESS);
@@ -89,14 +89,11 @@ int	lonly_philo_sleep(t_philo_thread_info *philo_info)
 
 int	philo_think(t_philo_thread_info *philo_info)
 {
-	t_time_us	time_to_think_us;
-
 	if (philo_write(philo_info, "is thinking") == GET_TIME_ERROR)
 		return (GET_TIME_ERROR);
 	if (philo_info->philo_max % 2 == 1)
 	{
-		time_to_think_us = UNIT_TIME_US;
-		if (philo_usleep(philo_info, time_to_think_us) == FAILURE)
+		if (philo_usleep(philo_info, philo_info->time_to_think_us) == FAILURE)
 			return (FAILURE);
 	}
 	return (SUCCESS);
