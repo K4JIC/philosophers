@@ -12,16 +12,6 @@
 
 #include "philo.h"
 
-static int	ft_isnum(char c)
-{
-	return ('0' <= c && c <= '9');
-}
-
-static int	ft_isspace(char c)
-{
-	return (c == ' ' || (9 <= c && c <= 13));
-}
-
 static int	ft_strcmp(char *str1, char *str2)
 {
 	unsigned char	*uc_str1;
@@ -73,7 +63,7 @@ static int	validate_atoi(int *integer, char *ascii)
 	res = 0;
 	i = 0;
 	sign = 1;
-	while (ft_isspace(ascii[i]))
+	while (ascii[i] == ' ' || (9 <= ascii[i] && ascii[i] <= 13))
 		i++;
 	if (ascii[i] == '-' || ascii[i] == '+')
 	{
@@ -81,9 +71,9 @@ static int	validate_atoi(int *integer, char *ascii)
 			sign = -1;
 		i++;
 	}
-	if (!is_integer(ascii) || !ft_isnum(ascii[i]))
+	if (!is_integer(ascii) || !('0' <= ascii[i] && ascii[i] <= '9'))
 		return (FAILURE);
-	while (ft_isnum(ascii[i]))
+	while ('0' <= ascii[i] && ascii[i] <= '9')
 	{
 		res = res * 10 + (ascii[i] - '0');
 		i++;

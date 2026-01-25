@@ -136,7 +136,11 @@ int		set_threads_info(t_master *master);
 /*routine_finish.c*/
 int		is_finished(t_philo_thread_info *philo_info);
 
-/*routine_action.c*/
+/*philo_action_utils.c*/
+int		philo_usleep(t_philo_thread_info *philo_info, useconds_t wait_time_us);
+int		philo_write(t_philo_thread_info *philo_info, char *msg);
+
+/*philo_action.c*/
 int		philo_eat(t_philo_thread_info *philo_info);
 int		philo_eat_rev(t_philo_thread_info *philo_info);
 int		philo_sleep(t_philo_thread_info *philo_info);

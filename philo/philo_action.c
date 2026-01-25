@@ -12,42 +12,6 @@
 
 #include "philo.h"
 
-int	philo_usleep(t_philo_thread_info *philo_info, useconds_t wait_time_us)
-{
-	t_time_us	start_clock_us;
-	t_time_us	now_clock_us;
-	size_t		i;
-
-	if (get_time_us(&start_clock_us) == FAILURE)
-		return (GET_TIME_ERROR);
-	i = 0;
-	while (1)
-	{
-		if (get_time_us(&now_clock_us) == FAILURE)
-			return (GET_TIME_ERROR);
-		if (now_clock_us - start_clock_us > wait_time_us)
-			break ;
-		if (is_finished(philo_info) == FAILURE)
-			return (FAILURE);
-		usleep(UNIT_TIME_US);
-		i++;
-	}
-	return (SUCCESS);
-}
-
-int	philo_write(t_philo_thread_info *philo_info, char *msg)
-{
-	t_time_us	time_us;
-
-	if (get_time_duration_us(&time_us, philo_info->start_clock_us) == FAILURE)
-		return (GET_TIME_ERROR);
-	pthread_mutex_lock(philo_info->write_lock);
-	if (*philo_info->finish_flag == FLAG_INIT)
-		printf("%04lld %d %s\n", time_us / 1000, philo_info->philo_num, msg);
-	pthread_mutex_unlock(philo_info->write_lock);
-	return (SUCCESS);
-}
-
 int	philo_eat(t_philo_thread_info *philo_info)
 {
 	pthread_mutex_lock(philo_info->rfork_lock);
@@ -117,7 +81,8 @@ int	lonly_philo_sleep(t_philo_thread_info *philo_info)
 		return (FAILURE);
 	if (philo_write(philo_info, "is thinking") == GET_TIME_ERROR)
 		return (GET_TIME_ERROR);
-	if (philo_usleep(philo_info, philo_info->time_to_die_us + UNIT_TIME_US) == FAILURE)
+	if (philo_usleep(philo_info, philo_info->time_to_die_us + UNIT_TIME_US)
+		== FAILURE)
 		return (FAILURE);
 	return (SUCCESS);
 }
@@ -126,7 +91,7 @@ int	philo_think(t_philo_thread_info *philo_info)
 {
 	t_time_us	time_to_think_us;
 
-	if (philo_info->philo_max %2 == 1)
+	if (philo_info->philo_max % 2 == 1)
 	{
 		time_to_think_us = UNIT_TIME_US;
 		if (philo_write(philo_info, "is thinking") == GET_TIME_ERROR)

@@ -4,9 +4,11 @@ CFLAGS	=	-Wall -Werror -Wextra
 SRCS	=	launch_threads.c\
 			main.c\
 			philo_action.c\
+			philo_action_utils.c\
 			philo_finish.c\
 			raise_error.c\
-			routines.c\
+			philo_routines.c\
+			grim_routines.c\
 			set_argv.c\
 			set_malloc.c\
 			set_mutex.c\
