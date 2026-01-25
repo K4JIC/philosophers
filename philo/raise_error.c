@@ -26,40 +26,23 @@ static int	ft_puterrmsg(char *errmsg)
 	return (SUCCESS);
 }
 
-static int	raise_error_and_exit(t_master *master, char *errmsg)
+int	input_error(void)
 {
-	free_master(master);
-	if (ft_puterrmsg(errmsg) == FAILURE)
-		return (FAILURE);
-	return (SUCCESS);
+	return (ft_puterrmsg("Error : Forbidden input.\n"));
 }
 
-int	input_error(t_master *master)
+int	malloc_error(void)
 {
-	return (raise_error_and_exit(master, "Error : Forbidden input.\n"));
+	return (ft_puterrmsg("Error : malloc() failed.\n"));
 }
 
-int	malloc_error(t_master *master)
+int	gettime_error(void)
 {
-	return (raise_error_and_exit(master, "Error : malloc() failed.\n"));
-}
-
-int	gettime_error(t_master *master)
-{
-	return (raise_error_and_exit(master,
+	return (ft_puterrmsg(
 			"Error : gettimeofday() failed before philo threads begin.\n"));
 }
 
-int	gettime_error_inner_thread(void)
+int	threads_error(void)
 {
-	if (ft_puterrmsg("gettimeofday() failed after philo threads begin.\n")
-		== FAILURE)
-		return (FAILURE);
-	return (SUCCESS);
-}
-
-int	threads_error(t_master *master)
-{
-	return (raise_error_and_exit
-		(master, "Error : failed to launch threads.\n"));
+	return (ft_puterrmsg("Error : failed to launch threads.\n"));
 }

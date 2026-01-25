@@ -157,11 +157,10 @@ int		philo_write(t_philo_thread_info *philo_info, char *msg);// 後で消す
 int		launch_threads(t_master *master);
 
 /*raise_error.c*/
-int		input_error(t_master *master);
-int		malloc_error(t_master *master);
-int		gettime_error(t_master *master);
-int		gettime_error_inner_thread(void);
-int		threads_error(t_master *master);
+int		input_error(void);
+int		malloc_error(void);
+int		gettime_error(void);
+int		threads_error(void);
 
 /*time_utils.c */
 int		get_time_us(t_time_us *time_us);

@@ -15,12 +15,13 @@ SRCS	=	launch_threads.c\
 			set_threads_info.c\
 			time_utils.c
 OBJS	=	$(SRCS:%.c=%.o)
+HDRS	=	philo.h
 # vpath %c ./philo
 
 .PHONY: all
 all: $(NAME)
 
-$(NAME): $(OBJS)
+$(NAME): $(OBJS) $(HDRS)
 	$(CC) $(OBJS) -o $(NAME)
 
 %.o: %.c
@@ -28,10 +29,11 @@ $(NAME): $(OBJS)
 
 .PHONY: clean
 clean:
-	rm $(OBJS)
+	rm -f $(OBJS)
 
 .PHONY: fclean
 fclean: clean
-	rm $(TARGET)
+	rm -f $(NAME)
 
+.PHONY: re
 re: fclean all

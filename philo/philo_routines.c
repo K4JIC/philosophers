@@ -18,7 +18,7 @@ static void	*lonly_philo_routine(t_philo_thread_info *philo_info)
 
 	res = lonly_philo_sleep(philo_info);
 	if (res == GET_TIME_ERROR)
-		return (gettime_error_inner_thread(), NULL);
+		return (gettime_error(), NULL);
 	return (NULL);
 }
 
@@ -30,17 +30,17 @@ static void	*odd_philo_routine(t_philo_thread_info *philo_info)
 	{
 		res = philo_eat(philo_info);
 		if (res == GET_TIME_ERROR)
-			return (gettime_error_inner_thread(), NULL);
+			return (gettime_error(), NULL);
 		if (res == FAILURE)
 			return (NULL);
 		res = philo_sleep(philo_info);
 		if (res == GET_TIME_ERROR)
-			return (gettime_error_inner_thread(), NULL);
+			return (gettime_error(), NULL);
 		if (res == FAILURE)
 			return (NULL);
 		res = philo_think(philo_info);
 		if (res == GET_TIME_ERROR)
-			return (gettime_error_inner_thread(), NULL);
+			return (gettime_error(), NULL);
 		if (res == FAILURE)
 			return (NULL);
 	}
@@ -55,17 +55,17 @@ static void	*even_philo_routine(t_philo_thread_info *philo_info)
 	{
 		res = philo_sleep(philo_info);
 		if (res == GET_TIME_ERROR)
-			return (gettime_error_inner_thread(), NULL);
+			return (gettime_error(), NULL);
 		if (res == FAILURE)
 			return (NULL);
 		res = philo_eat_rev(philo_info);
 		if (res == GET_TIME_ERROR)
-			return (gettime_error_inner_thread(), NULL);
+			return (gettime_error(), NULL);
 		if (res == FAILURE)
 			return (NULL);
 		res = philo_think(philo_info);
 		if (res == GET_TIME_ERROR)
-			return (gettime_error_inner_thread(), NULL);
+			return (gettime_error(), NULL);
 		if (res == FAILURE)
 			return (NULL);
 	}
