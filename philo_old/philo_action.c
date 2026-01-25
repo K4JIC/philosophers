@@ -6,7 +6,7 @@
 /*   By: tozaki <tozaki@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/17 16:51:43 by tozaki            #+#    #+#             */
-/*   Updated: 2026/01/25 17:10:41 by tozaki           ###   ########.fr       */
+/*   Updated: 2026/01/17 16:51:48 by tozaki           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,11 +91,11 @@ int	philo_think(t_philo_thread_info *philo_info)
 {
 	t_time_us	time_to_think_us;
 
-	if (philo_write(philo_info, "is thinking") == GET_TIME_ERROR)
-		return (GET_TIME_ERROR);
 	if (philo_info->philo_max % 2 == 1)
 	{
 		time_to_think_us = UNIT_TIME_US;
+		if (philo_write(philo_info, "is thinking") == GET_TIME_ERROR)
+			return (GET_TIME_ERROR);
 		if (philo_usleep(philo_info, time_to_think_us) == FAILURE)
 			return (FAILURE);
 	}

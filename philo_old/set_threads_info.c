@@ -29,16 +29,11 @@ static void	set_one_thread_info(t_master *master, int philo_num,
 	philo_info->time_to_sleep_us = master->input_info.time_to_sleep_us;
 	philo_info->must_eat_option = master->must_eat_option;
 	philo_info->must_eat = master->input_info.philo_must_eat;
+	philo_info->full_philo_count = &master->full_philo_count;
 	philo_info->finish_flag = &master->finish_flag;
-	philo_info->lfork_owner
-		= &master->forks_owner[(philo_num)
-		% master->input_info.philo_max];
-	philo_info->rfork_owner
-		= &master->forks_owner[(philo_num + 1)
-		% master->input_info.philo_max];
 }
 
-static void	set_one_thread_mutexes_info(t_master *master, int philo_num)
+static void	set_one_thread_mutex_info(t_master *master, int philo_num)
 {
 	t_philo_thread_info	*philo_info;
 
@@ -49,18 +44,13 @@ static void	set_one_thread_mutexes_info(t_master *master, int philo_num)
 	philo_info->lfork_lock
 		= &master->mutexes.forks_lock[(philo_num + 1)
 		% master->input_info.philo_max];
-	philo_info->rfork_owner_lock
-		= &master->mutexes.forks_owner_lock[philo_num
-		% master->input_info.philo_max];
-	philo_info->lfork_owner_lock
-		= &master->mutexes.forks_owner_lock[(philo_num + 1)
-		% master->input_info.philo_max];
 	philo_info->write_lock = &master->mutexes.write_lock;
 	philo_info->finish_flag_lock = &master->mutexes.finish_flag_lock;
 	philo_info->last_eat_lock = &master->mutexes.last_eat_lock;
+	philo_info->full_philo_lock = &master->mutexes.full_philo_lock;
 }
 
-static void	set_grim_reaper_info(t_master *master, t_time_us start_clock_us)
+void	set_grim_reaper_info(t_master *master, t_time_us start_clock_us)
 {
 	t_grim_reaper_thread_info	*grim_info;
 
@@ -72,8 +62,11 @@ static void	set_grim_reaper_info(t_master *master, t_time_us start_clock_us)
 	grim_info->last_eat_clock_us = master->last_eat_clock_us;
 	grim_info->last_eat_lock = &master->mutexes.last_eat_lock;
 	grim_info->write_lock = &master->mutexes.write_lock;
-	grim_info->finish_flag = &master->finish_flag;
+	grim_info->full_philo_lock = &master->mutexes.full_philo_lock;
+	grim_info->full_philo_count = &master->full_philo_count;
+	grim_info->dead_philo_name = &master->dead_philo_name;
 	grim_info->finish_flag_lock = &master->mutexes.finish_flag_lock;
+	grim_info->finish_flag = &master->finish_flag;
 }
 
 int	set_threads_info(t_master *master)
@@ -88,7 +81,7 @@ int	set_threads_info(t_master *master)
 	while (i < master->input_info.philo_max)
 	{
 		set_one_thread_info(master, i, start_clock_us);
-		set_one_thread_mutexes_info(master, i);
+		set_one_thread_mutex_info(master, i);
 		i++;
 	}
 	return (SUCCESS);

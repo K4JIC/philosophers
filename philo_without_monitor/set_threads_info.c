@@ -12,7 +12,7 @@
 
 #include "philo.h"
 
-static void	set_one_thread_info(t_master *master, int philo_num,
+static void	set_one_philo_own_info(t_master *master, int philo_num,
 	t_time_us start_clock_us)
 {
 	t_philo_thread_info	*philo_info;
@@ -20,8 +20,6 @@ static void	set_one_thread_info(t_master *master, int philo_num,
 	philo_info = &master->philos_info[philo_num];
 	memset(philo_info, 0, sizeof(t_philo_thread_info));
 	philo_info->start_clock_us = start_clock_us;
-	philo_info->last_eat_clock_us = &master->last_eat_clock_us[philo_num];
-	*philo_info->last_eat_clock_us = start_clock_us;
 	philo_info->philo_num = philo_num + 1;
 	philo_info->philo_max = master->input_info.philo_max;
 	philo_info->time_to_die_us = master->input_info.time_to_die_us;
@@ -29,16 +27,11 @@ static void	set_one_thread_info(t_master *master, int philo_num,
 	philo_info->time_to_sleep_us = master->input_info.time_to_sleep_us;
 	philo_info->must_eat_option = master->must_eat_option;
 	philo_info->must_eat = master->input_info.philo_must_eat;
-	philo_info->finish_flag = &master->finish_flag;
-	philo_info->lfork_owner
-		= &master->forks_owner[(philo_num)
-		% master->input_info.philo_max];
-	philo_info->rfork_owner
-		= &master->forks_owner[(philo_num + 1)
-		% master->input_info.philo_max];
+	philo_info->dead_philo_name = master->dead_philo_name;
 }
 
-static void	set_one_thread_mutexes_info(t_master *master, int philo_num)
+static void	set_one_philo_shared_info_with_p(t_master *master,
+	int philo_num, t_time_us start_clock_us)
 {
 	t_philo_thread_info	*philo_info;
 
@@ -49,18 +42,22 @@ static void	set_one_thread_mutexes_info(t_master *master, int philo_num)
 	philo_info->lfork_lock
 		= &master->mutexes.forks_lock[(philo_num + 1)
 		% master->input_info.philo_max];
-	philo_info->rfork_owner_lock
-		= &master->mutexes.forks_owner_lock[philo_num
-		% master->input_info.philo_max];
-	philo_info->lfork_owner_lock
-		= &master->mutexes.forks_owner_lock[(philo_num + 1)
-		% master->input_info.philo_max];
 	philo_info->write_lock = &master->mutexes.write_lock;
 	philo_info->finish_flag_lock = &master->mutexes.finish_flag_lock;
-	philo_info->last_eat_lock = &master->mutexes.last_eat_lock;
+	philo_info->last_eat_clock_us->mu = &master->mutexes.last_eat_clock_us->mu;
 }
 
-static void	set_grim_reaper_info(t_master *master, t_time_us start_clock_us)
+static void	set_one_philo_shared_info_with_o(t_master *master,
+	int philo_num, t_time_us start_clock_us)
+{
+	t_philo_thread_info	*philo_info;
+
+	philo_info = &master->philos_info[philo_num];
+	philo_info->last_eat_clock_us->val = &master->last_eat_clock_us->val[philo_num];
+	*philo_info->last_eat_clock_us->val = start_clock_us;
+}
+
+void	set_grim_reaper_info(t_master *master, t_time_us start_clock_us)
 {
 	t_grim_reaper_thread_info	*grim_info;
 
@@ -69,10 +66,9 @@ static void	set_grim_reaper_info(t_master *master, t_time_us start_clock_us)
 	grim_info->start_clock_us = start_clock_us;
 	grim_info->time_to_die_us = master->input_info.time_to_die_us;
 	grim_info->term_time_us = 0;
-	grim_info->last_eat_clock_us = master->last_eat_clock_us;
-	grim_info->last_eat_lock = &master->mutexes.last_eat_lock;
-	grim_info->write_lock = &master->mutexes.write_lock;
-	grim_info->finish_flag = &master->finish_flag;
+	grim_info->last_eat_clock_us->val = master->last_eat_clock_us->val;
+	grim_info->last_eat_clock_us->mu = &master->mutexes.last_eat_clock_us->mu;
+	grim_info->dead_philo_name = master->dead_philo_name;
 	grim_info->finish_flag_lock = &master->mutexes.finish_flag_lock;
 }
 
@@ -87,8 +83,9 @@ int	set_threads_info(t_master *master)
 	i = 0;
 	while (i < master->input_info.philo_max)
 	{
-		set_one_thread_info(master, i, start_clock_us);
-		set_one_thread_mutexes_info(master, i);
+		set_one_philo_own_info(master, i, start_clock_us);
+		set_one_philo_shared_info_with_p(master, i, start_clock_us);
+		set_one_philo_shared_info_with_o(master, i, start_clock_us);
 		i++;
 	}
 	return (SUCCESS);

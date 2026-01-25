@@ -12,6 +12,16 @@
 
 #include "philo.h"
 
+static int	ft_isnum(char c)
+{
+	return ('0' <= c && c <= '9');
+}
+
+static int	ft_isspace(char c)
+{
+	return (c == ' ' || (9 <= c && c <= 13));
+}
+
 static int	ft_strcmp(char *str1, char *str2)
 {
 	unsigned char	*uc_str1;
@@ -63,7 +73,7 @@ static int	validate_atoi(int *integer, char *ascii)
 	res = 0;
 	i = 0;
 	sign = 1;
-	while (ascii[i] == ' ' || (9 <= ascii[i] && ascii[i] <= 13))
+	while (ft_isspace(ascii[i]))
 		i++;
 	if (ascii[i] == '-' || ascii[i] == '+')
 	{
@@ -71,9 +81,9 @@ static int	validate_atoi(int *integer, char *ascii)
 			sign = -1;
 		i++;
 	}
-	if (!is_integer(ascii) || !('0' <= ascii[i] && ascii[i] <= '9'))
+	if (!is_integer(ascii) || !ft_isnum(ascii[i]))
 		return (FAILURE);
-	while ('0' <= ascii[i] && ascii[i] <= '9')
+	while (ft_isnum(ascii[i]))
 	{
 		res = res * 10 + (ascii[i] - '0');
 		i++;
@@ -84,25 +94,25 @@ static int	validate_atoi(int *integer, char *ascii)
 
 int	set_argv(int argc, char **argv, t_input_info *input_info)
 {
-	int	time_to_die_ms;
-	int	time_to_eat_ms;
-	int	time_to_sleep_ms;
+	int	time_to_die_int;
+	int	time_to_eat_int;
+	int	time_to_sleep_int;
 
 	if (validate_atoi(&(input_info->philo_max), argv[1]) == FAILURE)
 		return (FAILURE);
-	if (validate_atoi(&(time_to_die_ms), argv[2]) == FAILURE)
+	if (validate_atoi(&(time_to_die_int), argv[2]) == FAILURE)
 		return (FAILURE);
-	if (validate_atoi(&(time_to_eat_ms), argv[3]) == FAILURE)
+	if (validate_atoi(&(time_to_eat_int), argv[3]) == FAILURE)
 		return (FAILURE);
-	if (validate_atoi(&(time_to_sleep_ms), argv[4]) == FAILURE)
+	if (validate_atoi(&(time_to_sleep_int), argv[4]) == FAILURE)
 		return (FAILURE);
 	if (argc == 6)
 	{
 		if (validate_atoi(&(input_info->philo_must_eat), argv[5]) == FAILURE)
 			return (FAILURE);
 	}
-	input_info->time_to_die_us = (t_time_us)time_to_die_ms * 1000;
-	input_info->time_to_eat_us = (t_time_us)time_to_eat_ms * 1000;
-	input_info->time_to_sleep_us = (t_time_us)time_to_sleep_ms * 1000;
+	input_info->time_to_die_us = (t_time_us)time_to_die_int * 1000;
+	input_info->time_to_eat_us = (t_time_us)time_to_eat_int * 1000;
+	input_info->time_to_sleep_us = (t_time_us)time_to_sleep_int * 1000;
 	return (SUCCESS);
 }

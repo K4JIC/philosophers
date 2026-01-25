@@ -6,7 +6,7 @@
 /*   By: tozaki <tozaki@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/25 10:49:25 by tozaki            #+#    #+#             */
-/*   Updated: 2026/01/25 17:03:47 by tozaki           ###   ########.fr       */
+/*   Updated: 2026/01/25 10:49:31 by tozaki           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,18 +38,12 @@ int	philo_usleep(t_philo_thread_info *philo_info, useconds_t wait_time_us)
 int	philo_write(t_philo_thread_info *philo_info, char *msg)
 {
 	t_time_us	time_us;
-	int			res;
 
 	if (get_time_duration_us(&time_us, philo_info->start_clock_us) == FAILURE)
 		return (GET_TIME_ERROR);
-	pthread_mutex_lock(philo_info->finish_flag_lock);
-	res = *philo_info->finish_flag;
-	pthread_mutex_unlock(philo_info->finish_flag_lock);
-	if (res == FLAG_INIT)
-	{
-		pthread_mutex_lock(philo_info->write_lock);
+	pthread_mutex_lock(philo_info->write_lock);
+	if (*philo_info->finish_flag == FLAG_INIT)
 		printf("%04lld %d %s\n", time_us / 1000, philo_info->philo_num, msg);
-		pthread_mutex_unlock(philo_info->write_lock);
-	}
+	pthread_mutex_unlock(philo_info->write_lock);
 	return (SUCCESS);
 }

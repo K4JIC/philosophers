@@ -26,36 +26,42 @@ void	wait_threads(t_master *master)
 
 void	report_death(t_master *master)
 {
-	if (master->finish_flag != ALIVE)
+	if (master->dead_philo_name != FLAG_INIT)
 		printf("%04lld %d died\n", master->grim_info.term_time_us / 1000,
-			master->finish_flag + 1);
+			master->dead_philo_name + 1);
+}
+
+void	close_process(t_master *master)
+{
+	destroy_mutexes(&master->mutexes, master->input_info.philo_max);
+	free_master(master);
 }
 
 int	main(int argc, char **argv)
 {
 	t_master	master;
-	int			dead_philo_name;
 
 	memset(&master, 0, sizeof(t_master));
-	dead_philo_name = -1;
-	master.dead_philo_name = &dead_philo_name;
-	master.finish_flag = ALIVE;
+	master.dead_philo_name = FLAG_INIT;
+	master.finish_flag = FLAG_INIT;
 	if (argc != 5 && argc != 6)
-		return (input_error(&master));
+		return (input_error());
 	if (argc == 6)
 		master.must_eat_option = 1;
 	if (set_argv(argc, argv, &master.input_info) == FAILURE)
-		return (input_error(&master));
+		return (input_error());
 	if (set_malloc(&master) == FAILURE)
-		return (malloc_error(&master));
+		return (malloc_error());
 	set_mutexes(&master.mutexes, master.input_info.philo_max);
 	if (set_threads_info(&master) == FAILURE)
-		return (gettime_error(&master));
+		return (close_process(&master), gettime_error());
 	if (launch_threads(&master) == FAILURE)
-		return (threads_error(&master));
+	{
+		close_process(&master);
+		return (threads_error());
+	}
 	wait_threads(&master);
 	pthread_join(*master.grim_reaper_thread, NULL);
 	report_death(&master);
-	destroy_mutexes(&master.mutexes, master.input_info.philo_max);
-	free_master(&master);
+	close_process(&master);
 }

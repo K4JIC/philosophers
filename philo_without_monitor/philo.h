@@ -26,22 +26,18 @@
 # define UNIT_TIME_US 500
 # define INT_MAX_CHAR "2147483647"
 # define INT_MIN_CHAR "-2147483648"
-# define NO_OWNER 0
-# define FINISHED 0
-# define ALIVE -1
 
 // # define philo_gettimeofday gettimeofday
 // int	philo_gettimeofday(struct timeval *tv, struct timezone *tz);
 
 typedef unsigned long long	t_time_us;
 
-# define GET_TIME_ERROR -1
-
-typedef struct s_mu_val
+enum e_error_identifier
 {
-	int				val;
-	pthread_mutex_t	mu;
-}					t_mu_val;
+	GET_TIME_ERROR=-1,
+	INPUTERROR,
+	MALLOCERROR
+};
 
 typedef struct s_input_info
 {
@@ -55,16 +51,15 @@ typedef struct s_input_info
 typedef struct s_mutexes
 {
 	pthread_mutex_t	*forks_lock;
-	pthread_mutex_t	*forks_owner_lock;
 	pthread_mutex_t	write_lock;
 	pthread_mutex_t	finish_flag_lock;
-	pthread_mutex_t	last_eat_lock;
+	pthread_mutex_t	last_eat_clock_us->mu;
 }						t_mutexes;
 
 typedef struct s_thread_info
 {
 	t_time_us			start_clock_us;
-	t_time_us			*last_eat_clock_us;
+	t_time_us			*last_eat_clock_us->val;
 	t_time_us			unit_time_us;
 	int					philo_num;
 	int					philo_max;
@@ -74,17 +69,12 @@ typedef struct s_thread_info
 	t_time_us			time_to_think_us;
 	pthread_mutex_t		*rfork_lock;
 	pthread_mutex_t		*lfork_lock;
-	pthread_mutex_t		*rfork_owner_lock;
-	pthread_mutex_t		*lfork_owner_lock;
 	pthread_mutex_t		*write_lock;
 	pthread_mutex_t		*finish_flag_lock;
-	pthread_mutex_t		*last_eat_lock;
-	int					*rfork_owner;
-	int					*lfork_owner;
+	pthread_mutex_t		*last_eat_clock_us->mu;
 	int					must_eat_option;
 	int					must_eat;
 	int					eat_count;
-	int					*finish_flag;
 	int					*dead_philo_name;
 }						t_philo_thread_info;
 
@@ -94,12 +84,10 @@ typedef struct s_grim_reaper_thread_info
 	t_time_us			start_clock_us;
 	t_time_us			time_to_die_us;
 	t_time_us			term_time_us;
-	t_time_us			*last_eat_clock_us;
-	pthread_mutex_t		*last_eat_lock;
-	pthread_mutex_t		*write_lock;
-	int					*finish_flag;
-	pthread_mutex_t		*finish_flag_lock;
+	t_time_us			*last_eat_clock_us->val;
+	pthread_mutex_t		*last_eat_clock_us->mu;
 	int					*dead_philo_name;
+	pthread_mutex_t		*finish_flag_lock;
 }				t_grim_reaper_thread_info;
 
 typedef struct s_master
@@ -114,9 +102,7 @@ typedef struct s_master
 	// materials shared between different kinds of threads
 	int							must_eat_option;
 	t_mutexes					mutexes;
-	t_time_us					*last_eat_clock_us;
-	int							*forks_owner;
-	int							finish_flag;
+	t_time_us					*last_eat_clock_us->val;
 	int							*dead_philo_name;
 }					t_master;
 
@@ -139,15 +125,14 @@ int		is_finished(t_philo_thread_info *philo_info);
 
 /*routine_action.c*/
 int		philo_eat(t_philo_thread_info *philo_info);
-int		philo_eat_rev(t_philo_thread_info *philo_info);
 int		philo_sleep(t_philo_thread_info *philo_info);
-void	philo_drop_forks(t_philo_thread_info *philo_info);
+int		philo_think(t_philo_thread_info *philo_info);
 
 /*routine.c*/
 void	*philo_routine(void *info);
 void	*observe_routine(void *master_void);
 void	*grim_reaper_routine(void *gr_info_void);
-int		philo_write(t_philo_thread_info *philo_info, char *msg);
+int		philo_write(t_philo_thread_info *philo_info, char *msg);// 後で消す
 
 /*launch_threads.c*/
 int		launch_threads(t_master *master);

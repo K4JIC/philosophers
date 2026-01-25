@@ -43,17 +43,9 @@ int	set_malloc(t_master *master)
 			* master->input_info.philo_max);
 	if (!master->mutexes.forks_lock)
 		return (free_master(master), FAILURE);
-	master->mutexes.forks_owner_lock = ft_calloc(sizeof(pthread_mutex_t)
+	master->last_eat_clock_us->val = ft_calloc(sizeof(t_time_us)
 			* master->input_info.philo_max);
-	if (!master->mutexes.forks_owner_lock)
-		return (free_master(master), FAILURE);
-	master->last_eat_clock_us = ft_calloc(sizeof(t_time_us)
-			* master->input_info.philo_max);
-	if (!master->last_eat_clock_us)
-		return (free_master(master), FAILURE);
-	master->forks_owner = ft_calloc(sizeof(t_time_us)
-			* master->input_info.philo_max);
-	if (!master->forks_owner)
+	if (!master->last_eat_clock_us->val)
 		return (free_master(master), FAILURE);
 	return (SUCCESS);
 }
@@ -68,10 +60,6 @@ void	free_master(t_master *master)
 		free(master->philos_info);
 	if (master->mutexes.forks_lock)
 		free(master->mutexes.forks_lock);
-	if (master->mutexes.forks_owner_lock)
-		free(master->mutexes.forks_owner_lock);
-	if (master->last_eat_clock_us)
-		free(master->last_eat_clock_us);
-	if (master->forks_owner)
-		free(master->forks_owner);
+	if (master->last_eat_clock_us->val)
+		free(master->last_eat_clock_us->val);
 }

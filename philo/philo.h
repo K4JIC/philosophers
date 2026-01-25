@@ -6,7 +6,7 @@
 /*   By: tozaki <tozaki@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/09 12:54:47 by tozaki            #+#    #+#             */
-/*   Updated: 2026/01/11 16:56:17 by tozaki           ###   ########.fr       */
+/*   Updated: 2026/01/25 17:19:55 by tozaki           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,20 +22,15 @@
 
 # define SUCCESS 0
 # define FAILURE 1
-# define SEC_TO_USEC 1000000
-# define UNIT_TIME_US 500
+# define GET_TIME_ERROR -1
+# define UNIT_TIME_US 800
 # define INT_MAX_CHAR "2147483647"
 # define INT_MIN_CHAR "-2147483648"
 
 # define FLAG_INIT -1
 # define FLAG_DONE 1
 
-// # define philo_gettimeofday gettimeofday
-// int	philo_gettimeofday(struct timeval *tv, struct timezone *tz);
-
 typedef unsigned long long	t_time_us;
-
-# define GET_TIME_ERROR -1
 
 typedef struct s_mu_val
 {
@@ -50,7 +45,7 @@ typedef struct s_input_info
 	t_time_us	time_to_eat_us;
 	t_time_us	time_to_sleep_us;
 	int			philo_must_eat;
-}		t_input_info;
+}				t_input_info;
 
 typedef struct s_mutexes
 {
@@ -59,7 +54,7 @@ typedef struct s_mutexes
 	pthread_mutex_t	finish_flag_lock;
 	pthread_mutex_t	last_eat_lock;
 	pthread_mutex_t	full_philo_lock;
-}						t_mutexes;
+}					t_mutexes;
 
 typedef struct s_thread_info
 {
@@ -81,6 +76,7 @@ typedef struct s_thread_info
 	int					must_eat_option;
 	int					must_eat;
 	int					eat_count;
+	int					philo_finish_norma;
 	int					*full_philo_count;
 	int					*finish_flag;
 }						t_philo_thread_info;
@@ -99,7 +95,7 @@ typedef struct s_grim_reaper_thread_info
 	int					*dead_philo_name;
 	int					*full_philo_count;
 	int					*finish_flag;
-}				t_grim_reaper_thread_info;
+}						t_grim_reaper_thread_info;
 
 typedef struct s_master
 {
@@ -117,7 +113,7 @@ typedef struct s_master
 	int							dead_philo_name;
 	int							full_philo_count;
 	int							finish_flag;
-}					t_master;
+}								t_master;
 
 /*set_argv.c*/
 int		set_argv(int argc, char **argv, t_input_info *input_info);

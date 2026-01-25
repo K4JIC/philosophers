@@ -12,7 +12,7 @@
 
 #include "philo.h"
 
-static int	launch_one_philo_thread(t_master *master, int philo_num)
+static int	launch_one_thread(t_master *master, int philo_num)
 {
 	if (pthread_create(&(master->philo_threads[philo_num]),
 			NULL,
@@ -43,7 +43,7 @@ int	launch_threads(t_master *master)
 	i = 0;
 	while (i < master->input_info.philo_max)
 	{
-		if (launch_one_philo_thread(master, i) == FAILURE)
+		if (launch_one_thread(master, i) == FAILURE)
 			return (FAILURE);
 		i++;
 	}

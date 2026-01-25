@@ -1,3 +1,15 @@
+# **************************************************************************** #
+#                                                                              #
+#                                                         :::      ::::::::    #
+#    Makefile                                           :+:      :+:    :+:    #
+#                                                     +:+ +:+         +:+      #
+#    By: tozaki <tozaki@student.42tokyo.jp>         +#+  +:+       +#+         #
+#                                                 +#+#+#+#+#+   +#+            #
+#    Created: 2026/01/22 13:04:48 by tozaki            #+#    #+#              #
+#    Updated: 2026/01/22 13:04:49 by tozaki           ###   ########.fr        #
+#                                                                              #
+# **************************************************************************** #
+
 NAME	=	philo
 CC		=	cc
 CFLAGS	=	-Wall -Werror -Wextra
@@ -26,10 +38,11 @@ $(NAME): $(OBJS)
 
 .PHONY: clean
 clean:
-	rm $(OBJS)
+	rm -rf $(OBJS)
 
 .PHONY: fclean
 fclean: clean
-	rm $(TARGET)
+	rm -rf $(TARGET)
 
+.PHONY: re
 re: fclean all

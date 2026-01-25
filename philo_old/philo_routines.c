@@ -58,12 +58,12 @@ static void	*even_philo_routine(t_philo_thread_info *philo_info)
 			return (gettime_error(), NULL);
 		if (res == FAILURE)
 			return (NULL);
-		res = philo_think(philo_info);
+		res = philo_eat_rev(philo_info);
 		if (res == GET_TIME_ERROR)
 			return (gettime_error(), NULL);
 		if (res == FAILURE)
 			return (NULL);
-		res = philo_eat_rev(philo_info);
+		res = philo_think(philo_info);
 		if (res == GET_TIME_ERROR)
 			return (gettime_error(), NULL);
 		if (res == FAILURE)

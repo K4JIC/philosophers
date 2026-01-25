@@ -26,9 +26,9 @@
 # define UNIT_TIME_US 500
 # define INT_MAX_CHAR "2147483647"
 # define INT_MIN_CHAR "-2147483648"
-# define NO_OWNER 0
-# define FINISHED 0
-# define ALIVE -1
+
+# define FLAG_INIT -1
+# define FLAG_DONE 1
 
 // # define philo_gettimeofday gettimeofday
 // int	philo_gettimeofday(struct timeval *tv, struct timezone *tz);
@@ -55,10 +55,10 @@ typedef struct s_input_info
 typedef struct s_mutexes
 {
 	pthread_mutex_t	*forks_lock;
-	pthread_mutex_t	*forks_owner_lock;
 	pthread_mutex_t	write_lock;
 	pthread_mutex_t	finish_flag_lock;
 	pthread_mutex_t	last_eat_lock;
+	pthread_mutex_t	full_philo_lock;
 }						t_mutexes;
 
 typedef struct s_thread_info
@@ -74,18 +74,15 @@ typedef struct s_thread_info
 	t_time_us			time_to_think_us;
 	pthread_mutex_t		*rfork_lock;
 	pthread_mutex_t		*lfork_lock;
-	pthread_mutex_t		*rfork_owner_lock;
-	pthread_mutex_t		*lfork_owner_lock;
 	pthread_mutex_t		*write_lock;
 	pthread_mutex_t		*finish_flag_lock;
 	pthread_mutex_t		*last_eat_lock;
-	int					*rfork_owner;
-	int					*lfork_owner;
+	pthread_mutex_t		*full_philo_lock;
 	int					must_eat_option;
 	int					must_eat;
 	int					eat_count;
+	int					*full_philo_count;
 	int					*finish_flag;
-	int					*dead_philo_name;
 }						t_philo_thread_info;
 
 typedef struct s_grim_reaper_thread_info
@@ -97,9 +94,11 @@ typedef struct s_grim_reaper_thread_info
 	t_time_us			*last_eat_clock_us;
 	pthread_mutex_t		*last_eat_lock;
 	pthread_mutex_t		*write_lock;
-	int					*finish_flag;
 	pthread_mutex_t		*finish_flag_lock;
+	pthread_mutex_t		*full_philo_lock;
 	int					*dead_philo_name;
+	int					*full_philo_count;
+	int					*finish_flag;
 }				t_grim_reaper_thread_info;
 
 typedef struct s_master
@@ -115,9 +114,9 @@ typedef struct s_master
 	int							must_eat_option;
 	t_mutexes					mutexes;
 	t_time_us					*last_eat_clock_us;
-	int							*forks_owner;
+	int							dead_philo_name;
+	int							full_philo_count;
 	int							finish_flag;
-	int							*dead_philo_name;
 }					t_master;
 
 /*set_argv.c*/
@@ -137,27 +136,31 @@ int		set_threads_info(t_master *master);
 /*routine_finish.c*/
 int		is_finished(t_philo_thread_info *philo_info);
 
-/*routine_action.c*/
+/*philo_action_utils.c*/
+int		philo_usleep(t_philo_thread_info *philo_info, useconds_t wait_time_us);
+int		philo_write(t_philo_thread_info *philo_info, char *msg);
+
+/*philo_action.c*/
 int		philo_eat(t_philo_thread_info *philo_info);
 int		philo_eat_rev(t_philo_thread_info *philo_info);
 int		philo_sleep(t_philo_thread_info *philo_info);
-void	philo_drop_forks(t_philo_thread_info *philo_info);
+int		philo_think(t_philo_thread_info *philo_info);
+int		lonly_philo_sleep(t_philo_thread_info *philo_info);
 
 /*routine.c*/
 void	*philo_routine(void *info);
 void	*observe_routine(void *master_void);
 void	*grim_reaper_routine(void *gr_info_void);
-int		philo_write(t_philo_thread_info *philo_info, char *msg);
+int		philo_write(t_philo_thread_info *philo_info, char *msg);// 後で消す
 
 /*launch_threads.c*/
 int		launch_threads(t_master *master);
 
 /*raise_error.c*/
-int		input_error(t_master *master);
-int		malloc_error(t_master *master);
-int		gettime_error(t_master *master);
-int		gettime_error_inner_thread(void);
-int		threads_error(t_master *master);
+int		input_error(void);
+int		malloc_error(void);
+int		gettime_error(void);
+int		threads_error(void);
 
 /*time_utils.c */
 int		get_time_us(t_time_us *time_us);

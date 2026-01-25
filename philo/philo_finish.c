@@ -6,7 +6,7 @@
 /*   By: tozaki <tozaki@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/17 16:51:51 by tozaki            #+#    #+#             */
-/*   Updated: 2026/01/17 16:51:53 by tozaki           ###   ########.fr       */
+/*   Updated: 2026/01/25 17:20:57 by tozaki           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,8 +28,14 @@ static int	is_full(t_philo_thread_info *philo_info)
 {
 	if (!philo_info->must_eat_option)
 		return (0);
-	if (philo_info->eat_count == philo_info->must_eat)
-		return (1);
+	if (philo_info->philo_finish_norma != 1)
+	{
+		if (philo_info->eat_count >= philo_info->must_eat)
+		{
+			philo_info->philo_finish_norma = 1;
+			return (1);
+		}
+	}
 	return (0);
 }
 

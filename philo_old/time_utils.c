@@ -16,7 +16,7 @@ static t_time_us	convert_tv_to_ull(struct timeval tv)
 {
 	t_time_us	time_us;
 
-	time_us = tv.tv_sec * 1000 * 1000 + tv.tv_usec;
+	time_us = tv.tv_sec * SEC_TO_USEC + tv.tv_usec;
 	return (time_us);
 }
 

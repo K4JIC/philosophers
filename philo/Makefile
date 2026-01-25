@@ -1,3 +1,15 @@
+# **************************************************************************** #
+#                                                                              #
+#                                                         :::      ::::::::    #
+#    Makefile                                           :+:      :+:    :+:    #
+#                                                     +:+ +:+         +:+      #
+#    By: tozaki <tozaki@student.42tokyo.jp>         +#+  +:+       +#+         #
+#                                                 +#+#+#+#+#+   +#+            #
+#    Created: 2026/01/25 13:27:22 by tozaki            #+#    #+#              #
+#    Updated: 2026/01/25 13:27:23 by tozaki           ###   ########.fr        #
+#                                                                              #
+# **************************************************************************** #
+
 NAME	=	philo
 CC		=	cc
 CFLAGS	=	-Wall -Werror -Wextra
@@ -16,7 +28,6 @@ SRCS	=	launch_threads.c\
 			time_utils.c
 OBJS	=	$(SRCS:%.c=%.o)
 HDRS	=	philo.h
-# vpath %c ./philo
 
 .PHONY: all
 all: $(NAME)

@@ -6,7 +6,7 @@
 /*   By: tozaki <tozaki@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/25 11:10:08 by tozaki            #+#    #+#             */
-/*   Updated: 2026/01/25 17:07:22 by tozaki           ###   ########.fr       */
+/*   Updated: 2026/01/25 11:10:10 by tozaki           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,9 +14,9 @@
 
 static int	check_alive(t_grim_reaper_thread_info *grim_info, int philo_num)
 {
-	t_time_us	now_clock_us;
-	t_time_us	last_eat_us;
-	t_time_us	hungry_time_us;
+	t_time_us					now_clock_us;
+	t_time_us					last_eat_us;
+	t_time_us					hungry_time_us;
 
 	if (get_time_us(&now_clock_us) == FAILURE)
 		return (GET_TIME_ERROR);
@@ -43,9 +43,7 @@ static int	check_full(t_grim_reaper_thread_info *grim_info)
 	if (*grim_info->full_philo_count == grim_info->philo_max)
 	{
 		pthread_mutex_unlock(grim_info->full_philo_lock);
-		pthread_mutex_lock(grim_info->finish_flag_lock);
 		*grim_info->finish_flag = FLAG_DONE;
-		pthread_mutex_unlock(grim_info->finish_flag_lock);
 		return (SUCCESS);
 	}
 	pthread_mutex_unlock(grim_info->full_philo_lock);
@@ -65,7 +63,6 @@ void	*grim_reaper_routine(void *grim_info_void)
 		ret = check_alive(grim_info, i);
 		if (ret == GET_TIME_ERROR)
 		{
-			gettime_error();
 			break ;
 		}
 		else if (ret == FAILURE)

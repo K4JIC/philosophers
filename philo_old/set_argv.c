@@ -84,25 +84,25 @@ static int	validate_atoi(int *integer, char *ascii)
 
 int	set_argv(int argc, char **argv, t_input_info *input_info)
 {
-	int	time_to_die_ms;
-	int	time_to_eat_ms;
-	int	time_to_sleep_ms;
+	int	time_to_die_int;
+	int	time_to_eat_int;
+	int	time_to_sleep_int;
 
 	if (validate_atoi(&(input_info->philo_max), argv[1]) == FAILURE)
 		return (FAILURE);
-	if (validate_atoi(&(time_to_die_ms), argv[2]) == FAILURE)
+	if (validate_atoi(&(time_to_die_int), argv[2]) == FAILURE)
 		return (FAILURE);
-	if (validate_atoi(&(time_to_eat_ms), argv[3]) == FAILURE)
+	if (validate_atoi(&(time_to_eat_int), argv[3]) == FAILURE)
 		return (FAILURE);
-	if (validate_atoi(&(time_to_sleep_ms), argv[4]) == FAILURE)
+	if (validate_atoi(&(time_to_sleep_int), argv[4]) == FAILURE)
 		return (FAILURE);
 	if (argc == 6)
 	{
 		if (validate_atoi(&(input_info->philo_must_eat), argv[5]) == FAILURE)
 			return (FAILURE);
 	}
-	input_info->time_to_die_us = (t_time_us)time_to_die_ms * 1000;
-	input_info->time_to_eat_us = (t_time_us)time_to_eat_ms * 1000;
-	input_info->time_to_sleep_us = (t_time_us)time_to_sleep_ms * 1000;
+	input_info->time_to_die_us = (t_time_us)time_to_die_int * 1000;
+	input_info->time_to_eat_us = (t_time_us)time_to_eat_int * 1000;
+	input_info->time_to_sleep_us = (t_time_us)time_to_sleep_int * 1000;
 	return (SUCCESS);
 }

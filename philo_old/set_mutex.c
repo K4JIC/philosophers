@@ -20,11 +20,11 @@ void	set_mutexes(t_mutexes *mutexes, int philo_max)
 	pthread_mutex_init(&mutexes->write_lock, NULL);
 	pthread_mutex_init(&mutexes->finish_flag_lock, NULL);
 	pthread_mutex_init(&mutexes->last_eat_lock, NULL);
+	pthread_mutex_init(&mutexes->full_philo_lock, NULL);
 	i = 0;
 	while (i < philo_max)
 	{
 		pthread_mutex_init(&mutexes->forks_lock[i], NULL);
-		pthread_mutex_init(&mutexes->forks_owner_lock[i], NULL);
 		i++;
 	}
 }
@@ -36,6 +36,7 @@ void	destroy_mutexes(t_mutexes *mutexes, int philo_max)
 	pthread_mutex_destroy(&mutexes->write_lock);
 	pthread_mutex_destroy(&mutexes->finish_flag_lock);
 	pthread_mutex_destroy(&mutexes->last_eat_lock);
+	pthread_mutex_destroy(&mutexes->full_philo_lock);
 	i = 0;
 	while (i < philo_max)
 	{
