@@ -47,7 +47,7 @@ int	philo_write(t_philo_thread_info *philo_info, char *msg)
 		return (GET_TIME_ERROR);
 	pthread_mutex_lock(philo_info->write_lock);
 	if (*philo_info->finish_flag == ALIVE)
-		printf("%04lld %d %s\n", time_us / 1000, philo_info->philo_num, msg);
+		printf("%-4lld %d %s\n", time_us / 1000, philo_info->philo_num, msg);
 	pthread_mutex_unlock(philo_info->write_lock);
 	return (SUCCESS);
 }

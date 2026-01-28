@@ -6,7 +6,7 @@
 /*   By: tozaki <tozaki@student.42tokyo.jp>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/23 15:27:14 by tozaki            #+#    #+#             */
-/*   Updated: 2026/01/06 18:42:29 by tozaki           ###   ########.fr       */
+/*   Updated: 2026/01/28 22:25:32 by tozaki           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,8 +101,12 @@ int	set_argv(int argc, char **argv, t_input_info *input_info)
 		if (validate_atoi(&(input_info->philo_must_eat), argv[5]) == FAILURE)
 			return (FAILURE);
 	}
+	if (input_info->philo_max < 0 || time_to_die_ms < 0
+			|| time_to_eat_ms < 0 || time_to_sleep_ms < 0)
+		return (FAILURE);
 	input_info->time_to_die_us = (t_time_us)time_to_die_ms * 1000;
 	input_info->time_to_eat_us = (t_time_us)time_to_eat_ms * 1000;
 	input_info->time_to_sleep_us = (t_time_us)time_to_sleep_ms * 1000;
 	return (SUCCESS);
 }
+
