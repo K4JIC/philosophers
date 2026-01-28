@@ -140,14 +140,14 @@ int		philo_write(t_philo_thread_info *philo_info, char *msg);
 int		philo_eat(t_philo_thread_info *philo_info);
 int		philo_eat_rev(t_philo_thread_info *philo_info);
 int		philo_sleep(t_philo_thread_info *philo_info);
-int		philo_think(t_philo_thread_info *philo_info);
+int		philo_think(t_philo_thread_info *philo_info, t_time_us rate);
 int		lonly_philo_sleep(t_philo_thread_info *philo_info);
 
 /*routine.c*/
 void	*philo_routine(void *info);
 void	*observe_routine(void *master_void);
 void	*grim_reaper_routine(void *gr_info_void);
-int		philo_write(t_philo_thread_info *philo_info, char *msg);// 後で消す
+int		philo_write(t_philo_thread_info *philo_info, char *msg);
 
 /*launch_threads.c*/
 int		launch_threads(t_master *master);

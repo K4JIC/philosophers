@@ -87,13 +87,14 @@ int	lonly_philo_sleep(t_philo_thread_info *philo_info)
 	return (SUCCESS);
 }
 
-int	philo_think(t_philo_thread_info *philo_info)
+int	philo_think(t_philo_thread_info *philo_info, t_time_us rate)
 {
 	if (philo_write(philo_info, "is thinking") == GET_TIME_ERROR)
 		return (GET_TIME_ERROR);
 	if (philo_info->philo_max % 2 == 1)
 	{
-		if (philo_usleep(philo_info, philo_info->time_to_think_us) == FAILURE)
+		if (philo_usleep(philo_info, philo_info->time_to_think_us / rate)
+			== FAILURE)
 			return (FAILURE);
 	}
 	return (SUCCESS);

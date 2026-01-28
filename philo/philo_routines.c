@@ -26,6 +26,9 @@ static void	*odd_philo_routine(t_philo_thread_info *philo_info)
 {
 	int	res;
 
+	res = philo_think(philo_info, 2);
+	if (res == GET_TIME_ERROR)
+		return (NULL);
 	while (1)
 	{
 		res = philo_eat(philo_info);
@@ -38,7 +41,7 @@ static void	*odd_philo_routine(t_philo_thread_info *philo_info)
 			return (gettime_error(), NULL);
 		if (res == FAILURE)
 			return (NULL);
-		res = philo_think(philo_info);
+		res = philo_think(philo_info, 1);
 		if (res == GET_TIME_ERROR)
 			return (gettime_error(), NULL);
 		if (res == FAILURE)
@@ -58,7 +61,7 @@ static void	*even_philo_routine(t_philo_thread_info *philo_info)
 			return (gettime_error(), NULL);
 		if (res == FAILURE)
 			return (NULL);
-		res = philo_think(philo_info);
+		res = philo_think(philo_info, 1);
 		if (res == GET_TIME_ERROR)
 			return (gettime_error(), NULL);
 		if (res == FAILURE)

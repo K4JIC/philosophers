@@ -11,6 +11,26 @@
 /* ************************************************************************** */
 
 #include "philo.h"
+#include <limits.h>
+
+static t_time_us	calc_time_to_think_us(t_master *master)
+{
+	int			philo_max;
+	t_time_us	sleep;
+	t_time_us	eat;
+	t_time_us	think;
+
+	philo_max = master->input_info.philo_max;
+	sleep = master->input_info.time_to_sleep_us;
+	eat = master->input_info.time_to_eat_us;
+	if (eat > LLONG_MAX / 2)
+		return (0);
+	if (sleep < eat * 2 * (philo_max % 2))
+		think = eat * 2 * (philo_max % 2) - sleep;
+	else
+		think = 0;
+	return (think);
+}
 
 static void	set_one_thread_constant_info(t_master *master, int philo_num,
 	t_time_us start_clock_us)
@@ -27,11 +47,7 @@ static void	set_one_thread_constant_info(t_master *master, int philo_num,
 	philo_info->time_to_die_us = master->input_info.time_to_die_us;
 	philo_info->time_to_eat_us = master->input_info.time_to_eat_us;
 	philo_info->time_to_sleep_us = master->input_info.time_to_sleep_us;
-	philo_info->time_to_think_us = (master->input_info.time_to_die_us
-		- master->input_info.time_to_sleep_us
-		- master->input_info.time_to_eat_us) / 4;
-	if (philo_info->time_to_think_us < 0)
-		philo_info->time_to_think_us = 0;
+	philo_info->time_to_think_us = calc_time_to_think_us(master);
 	philo_info->must_eat_option = master->must_eat_option;
 	philo_info->must_eat = master->input_info.philo_must_eat;
 	philo_info->full_philo_count = &master->full_philo_count;
